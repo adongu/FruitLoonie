@@ -1,4 +1,4 @@
-FruitLoonie
+# FruitLoonie
 
 ### Background
 FruitLoonie is an interactive slashing game inspired by Fruit Ninja with one simple objective, slashing as many fruits as possible without having slip pass or slashing a bomb.
@@ -7,9 +7,7 @@ FruitLoonie is an interactive slashing game inspired by Fruit Ninja with one sim
 2) All bomb slashes will cause a strike to be given,
 3) 3 Strikes will be game over.
 
-This game will only use ES6, babel.js, Easel.js, and
-
-**Functionality & MVP** and **Bonus Features** sections.  
+This game will only utilize ES6, babel.js, Easel.js, and canvas.
 
 ### Functionality & MVP  
 
@@ -32,11 +30,8 @@ This app will consist of a single screen with game interface, difficulty control
 and the About modal.  Game controls will include Start and pause.  On the right, three clickable shapes will be used to toggle between the difficulty of the game.
 
 ![wireframes][wireframes]
-[wireframes]: ./assets/wireframe.png
 
 ### Architecture and Technologies
-
-**NB**: one of the main things you should be researching and deciding upon while you write this proposal is what technologies you plan to use.  Identify and create a plan of attack for the major technical challenges in your project.
 
 This project will be implemented with the following technologies:
 
@@ -48,7 +43,8 @@ In addition to the webpack entry file, there will be three scripts involved in t
 
 `board.js`: this script will handle the logic for creating and updating the necessary `Easel.js` elements and rendering them to the DOM.
 
-`fruit.js`: this script will handle the logic of the object generated.  An fruit object will hold a `type` (apple, strawberry, bananas, bomb)
+`sliceable.js`: this script will handle the logic of the object generated.  An fruit object will import by (Fruit and Bomb classes)
+
 
 `generate.js`: this script will house the constructor and update functions for the `fruit objects`.
 
@@ -61,7 +57,7 @@ In addition to the webpack entry file, there will be three scripts involved in t
 
 - Get a green bundle with `webpack`
 - Learn enough `Easel.js` to render an object to the `Canvas` element
-- Refresh Canvas
+- Refresh Canvas skills
 
 **Day 2**: Dedicate this day to learning the `Easel.js` API.  First, build out the `Fruit` object to connect to the `Board` object.  Then, use `board.js` to create and render at least 4 types of fruits.  Build in the ability to toggle the game difficulty to decide speed and physics. Goals for the day:
 
@@ -89,3 +85,6 @@ Additional Features could include:
 - [ ] Adding combos to slashing multiple fruits together
 - [ ] Add animations for bomb explosion
 - [ ] Implement scoreboard to keep track of highest and previous score
+
+
+[wireframes]: ./assets/wireframe.png

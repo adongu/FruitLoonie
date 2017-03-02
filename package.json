@@ -1,0 +1,27 @@
+{
+  "name": "FruitLoonie",
+  "version": "1.0.0",
+  "description": "### Background FruitLoonie is an interactive slashing game inspired by Fruit Ninja with one simple objective, slashing as many fruits as possible without having slip pass or slashing a bomb.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "node_modules/.bin/webpack-dev-server --progress --colors --hot",
+    "webpack": "webpack",
+    "watch": "node_modules/.bin/webpack --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adongu/FruitLoonie.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adongu/FruitLoonie/issues"
+  },
+  "homepage": "https://github.com/adongu/FruitLoonie#readme",
+  "dependencies": {
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.4.1"
+  }
+}
