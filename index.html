@@ -3,10 +3,21 @@
   <head>
     <meta charset="utf-8">
     <title>Fruit Loonie</title>
-    <link rel="stylesheet" href="./assets/stylesheets/game.css" type="text/css"/>
-    <script type="text/javascript" src="game.js"></script>
+    <link rel="stylesheet" href="./assets/stylesheets/main.css" type="text/css"/>
+    <script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
+    <script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
+
+    <script src="https://code.createjs.com/tweenjs-0.6.2.min.js"></script>
+    <script src="https://code.createjs.com/soundjs-0.6.2.min.js"></script>
+    <script type="text/javascript" src="lib/game.js"></script>
+    <!-- <link rel="Game" href="lib/game.js"> -->
+
+  </head>
+
   </head>
   <body onload="init();">
-    <canvas id="cuttingBoard" width="500" height="400"></canvas>
+    <div class="game__cutting-board-box">
+      <canvas class="game__cutting-board" id="boardCanvas" width="640" height="480"></canvas>
+    </div>
   </body>
 </html>

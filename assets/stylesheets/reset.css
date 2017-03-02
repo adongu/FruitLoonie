@@ -1,0 +1,26 @@
+body, ul, li, a, h1, h2, h3, h4, main, nav, form, input,
+button, div, section, article, header  {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  outline: 0;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  vertical-align: inherit;
+  box-sizing: inherit;
+  text-decoration: inherit;
+  background: transparent;
+}
+
+ul, li{
+  list-style: none;
+}
+
+img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  -webkit-backface-visibility: hidden;
+}
