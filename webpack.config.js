@@ -6,5 +6,9 @@ module.exports = {
     filename: 'bundle.js',
     publicPath: 'js/'
   },
+  modules: {
+    loader: "css-loader",
+    
+  }
   devtool: 'source-maps'
 };
