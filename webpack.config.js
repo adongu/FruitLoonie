@@ -1,13 +1,22 @@
-const path = require('path');
 module.exports = {
-  entry: ['./lib/game.js'],
+  entry: "./lib/game.js",
   output: {
-    path: path.resolve(__dirname, 'app', 'assets', 'js/'),
-    filename: 'bundle.js',
-    publicPath: 'js/'
+  	filename: "./lib/bundle.js"
   },
-  devtool: 'source-maps',
+  module: {
+    loaders: [
+      {
+        test: /\.jsx?$/,
+        exclude: /(node_modules|bower_components)/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['es2015']
+        }
+      }
+    ]
+  },
   resolve: {
-   extensions: [".js"]
-  }
+    extensions: ['.js', '*']
+  },
+  devtool: 'source-map',
 };
