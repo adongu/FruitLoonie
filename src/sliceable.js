@@ -12,8 +12,8 @@ export default class Sliceable {
   mapSliceableImg(width, height, number){
     for (var i = 0; i < number; i++) {
       circles.push(new createjs.Shape())
-        circles[i].graphics.beginFill("red").drawCircle(0,0,50);
-        // circles[i].alpha = 0;
+        circles[i].graphics.beginFill("black").drawCircle(0,0,50);
+        circles[i].alpha = 0;
         circles[i].x = Math.random() * width;
         circles[i].y = 550;
     }

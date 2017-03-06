@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let mute = false;
   let muteBtn = document.getElementById("mute-btn");
   muteBtn.addEventListener('click', toggleMute);
-  muteButton.addEventListener('keydown', toggleMute);
+  muteBtn.addEventListener('keydown', toggleMute);
 
 
 
