@@ -91,7 +91,7 @@ export default class Sliceables {
     Object.keys(this.circles).forEach((id) =>{
       let pt = self.circles[id].globalToLocal(self.stage.mouseX, self.stage.mouseY);
 
-      self.circles[id].alpha = 0.2;
+      // self.circles[id].alpha = 0;
 
       this.checkOutOfBounds(id)
       this.checkCollision(pt, id)
