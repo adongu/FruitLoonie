@@ -35,8 +35,30 @@ document.addEventListener('DOMContentLoaded', () => {
     { src: "watermelon-2.png", id: "watermelon_2" },
     { src: "watermelon.png", id: "watermelon" },
     { src: "bomb.png", id: "bomb" },
-
   ]
+  let mute = false;
+  let muteBtn = document.getElementById("mute-btn");
+  muteBtn.addEventListener('click', toggleMute);
+  muteButton.addEventListener('keydown', toggleMute);
+
+
+
+  const toggleMute = (e) => {
+    console.log("hit");
+    e.preventDefault();
+    if (e.keyCode >= 0) {
+      return;
+    }
+    if (mute) {
+      mute = false;
+      createjs.Sound.muted = false;
+      muteBtn.className = "";
+    } else {
+      mute = true;
+      createjs.Sound.muted = true;
+      muteBtn.className = "unmute";
+    }
+  }
   const stage = new createjs.Stage("boardCanvas");
   let game = new Game(stage, manifest, sliceables);
   game.start();

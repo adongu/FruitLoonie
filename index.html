@@ -6,15 +6,19 @@
     <link rel="stylesheet" href="./assets/stylesheets/main.css" type="text/css"/>
     <script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
     <script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
-
     <script src="https://code.createjs.com/tweenjs-0.6.2.min.js"></script>
     <script src="https://code.createjs.com/soundjs-0.6.2.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=MedievalSharp|Metal+Mania" rel="stylesheet">
     <!-- <link rel="Game" href="lib/game.js"> -->
     <script type="application/javascript" src="./js/bundle.js"></script>
   </head>
 
   <body>
+    <header className="title">
+      Fruit Loonie
+    </header>
     <div class="game__cutting-board-box">
+      <button id="mute-btn">Mute</button>
       <canvas class="game__cutting-board" id="boardCanvas" width="640" height="480">
       </canvas>
     </div>
