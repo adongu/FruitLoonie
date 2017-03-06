@@ -27,7 +27,6 @@ export default class Sliceables {
     this.reset = this.reset.bind(this);
     this.sliceable = new Sliceable(loader);
     this.playSound = this.playSound.bind(this);
-    console.log('this.strikes in sliceables', this.strikes);
   }
 
   generateSliceables() {
@@ -39,10 +38,7 @@ export default class Sliceables {
     createjs.Ticker.addEventListener("tick", this.tick);
     // add amount by frequency, start from previous end frequency
     Object.keys(this.circles).slice(this.beginCounter, this.frequency).forEach( (id, index) => {
-      console.log("counter", this.beginCounter);
-      console.log("id", id);
 
-      // console.log("beginCounter:", self.beginCounter, "Frequency", this.frequency);
       // set time interval for each Sliceables
       self.stage.addChild(self.circles[id]);
       self.stage.addChild(self.circles[id].shape);

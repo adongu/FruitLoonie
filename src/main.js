@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   const toggleMute = (e) => {
-    console.log("hit");
     e.preventDefault();
     if (e.keyCode >= 0) {
       return;

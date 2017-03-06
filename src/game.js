@@ -21,7 +21,6 @@ export default class Game {
     this.loader = new createjs.LoadQueue(false);
     this.loader.installPlugin(createjs.Sound);
     createjs.MotionGuidePlugin.install();
-    console.log("here is sliceables in game", Sliceables.strike);
     this.sliceables = new Sliceables(this.stage, this.difficulty, this.loader, this.scoreField, this.strikesField);
     this.createFields = this.createFields.bind(this);
     this.handleComplete = this.handleComplete.bind(this);
@@ -41,7 +40,6 @@ export default class Game {
     this.stage.addChild(background);
     this.stage.update();
     document.onkeydown = () => {
-      console.log("hit")
       this.handleKeys(event);
     }
     this.createFields("scoreField", "strikesField");
@@ -75,7 +73,6 @@ export default class Game {
     //   this.checkGameOver();
     //   // this.handlePlay();
     // }
-    // console.log(!this.gameOver);
   }
 
   // checkGameOver() {
@@ -86,7 +83,6 @@ export default class Game {
   // }
 
   handleKeys (e) {
-    console.log("Clicked");
     this.strikes = this.strikesField.text.split(": ").slice(1)*1
     // game pause
     if (e.keyCode === 32 && this.started) {
@@ -111,7 +107,6 @@ export default class Game {
     createjs.Ticker.reset();
     // this.stage.addChild(scoreBoard);
     this.handleComplete();
-    debugger
   }
 
 };

@@ -25,8 +25,7 @@ export default class Sliceable {
     this.circles = {};
     for (let i = 0; i < difficulty; i++) {
       this.circles[i] = new createjs.Shape();
-      // console.log(this.circles[i].x);
-      // console.log(this.circles[i].y);
+
       this.circles[i].graphics.beginFill("red").drawCircle(radius, radius,radius);
       this.circles[i].alpha = 0;
       this.circles[i].type = this.determineSliceable();
