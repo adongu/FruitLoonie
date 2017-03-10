@@ -6,6 +6,7 @@
 /tmp/*
 !/log/.keep
 !/tmp/.keep
+./bundle.js.map
 
 # Ignore Byebug command history file.
 .byebug_history
