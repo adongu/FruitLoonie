@@ -13,7 +13,6 @@
 .byebug_history
 
 # Ignore node modules DS-Store and npm debug logs
-node_modules/
 
 bundle.js.map
 .byebug_history
