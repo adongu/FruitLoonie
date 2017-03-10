@@ -99,12 +99,11 @@ export default class Game {
 
   restart () {
     this.stage.removeAllChildren();
-    this.started = false;
-    this.strikes = 0;
-    this.score = 0;
-    this.gameOver = false;
-    this.started = false;
-    createjs.Ticker.reset();
+    // this.started = false;
+    // this.strikes = 0;
+    // this.score = 0;
+    // this.gameOver = false;
+    // this.started = false;
     // this.stage.addChild(scoreBoard);
     this.handleComplete();
   }
