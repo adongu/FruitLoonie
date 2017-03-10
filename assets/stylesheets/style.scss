@@ -7,12 +7,17 @@
   width: 100%
 }
 
+.title {
+  font-size: 32px;
+}
+
 .game__cutting-board {
   margin: auto;
   font-size: 32px;
   color: red;
   height: auto;
   max-width: 480px;
+  cursor: pointer;
 }
 
 .unmute {
