@@ -63,52 +63,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _game = __webpack_require__(1);
-
-var _game2 = _interopRequireDefault(_game);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-document.addEventListener('DOMContentLoaded', function () {
-  var manifest = [{ src: "bomb-explode.ogg", id: "boom_sound" }, { src: "splatter.ogg", id: "splatter_sound" }, { src: "throw-fruit.ogg", id: "throw_sound" }, { src: "game_over.png", id: "game_over" }, { src: "new-game.png", id: "new-game" }, { src: "pineapple.png", id: "pineapple" }, { src: "splash.png", id: "splash" }, { src: "watermelon.png", id: "watermelon" }, { src: "x.png", id: "x" }, { src: "xf.png", id: "xf" }, { src: "xx.png", id: "xx" }, { src: "xxf.png", id: "xxf" }, { src: "xxx.png", id: "xxx" }, { src: "xxxf.png", id: "xxxf" }, { src: "background.jpg", id: "background" }];
-
-  var sliceables = [{ src: "apple-1.png", id: "apple_1" }, { src: "apple-2.png", id: "apple_2" }, { src: "apple.png", id: "apple" }, { src: "banana-1.png", id: "banana_1" }, { src: "banana-2.png", id: "banana_2" }, { src: "banana.png", id: "banana" }, { src: "peach-1.png", id: "peach_1" }, { src: "peach-2.png", id: "peach_2" }, { src: "peach.png", id: "peach" }, { src: "strawberry-1.png", id: "strawberry_1" }, { src: "strawberry-2.png", id: "strawberry_2" }, { src: "strawberry.png", id: "strawberry" }, { src: "watermelon-1.png", id: "watermelon_1" }, { src: "watermelon-2.png", id: "watermelon_2" }, { src: "watermelon.png", id: "watermelon" }, { src: "bomb.png", id: "bomb" }];
-  var mute = false;
-  var muteBtn = document.getElementById("mute-btn");
-  muteBtn.addEventListener('click', toggleMute);
-
-  var toggleMute = function toggleMute(e) {
-    e.preventDefault();
-    if (e.keyCode >= 0) {
-      return;
-    }
-    if (mute) {
-      mute = false;
-      createjs.Sound.muted = false;
-      muteBtn.className = "";
-    } else {
-      mute = true;
-      createjs.Sound.muted = true;
-      muteBtn.className = "unmute";
-    }
-  };
-  var stage = new createjs.Stage("boardCanvas");
-  var game = new _game2.default(stage, manifest, sliceables);
-  game.start();
-});
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -120,7 +79,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _sliceables = __webpack_require__(3);
+var _sliceables = __webpack_require__(2);
 
 var _sliceables2 = _interopRequireDefault(_sliceables);
 
@@ -151,7 +110,6 @@ var Game = function () {
     this.loader = new createjs.LoadQueue(false);
     this.loader.installPlugin(createjs.Sound);
     createjs.MotionGuidePlugin.install();
-    console.log("here is sliceables in game", _sliceables2.default.strike);
     this.sliceables = new _sliceables2.default(this.stage, this.difficulty, this.loader, this.scoreField, this.strikesField);
     this.createFields = this.createFields.bind(this);
     this.handleComplete = this.handleComplete.bind(this);
@@ -176,7 +134,6 @@ var Game = function () {
       this.stage.addChild(background);
       this.stage.update();
       document.onkeydown = function () {
-        console.log("hit");
         _this.handleKeys(event);
       };
       this.createFields("scoreField", "strikesField");
@@ -214,7 +171,6 @@ var Game = function () {
       //   this.checkGameOver();
       //   // this.handlePlay();
       // }
-      // console.log(!this.gameOver);
     }
 
     // checkGameOver() {
@@ -227,7 +183,6 @@ var Game = function () {
   }, {
     key: "handleKeys",
     value: function handleKeys(e) {
-      console.log("Clicked");
       this.strikes = this.strikesField.text.split(": ").slice(1) * 1;
       // game pause
       if (e.keyCode === 32 && this.started) {
@@ -245,15 +200,13 @@ var Game = function () {
     key: "restart",
     value: function restart() {
       this.stage.removeAllChildren();
-      this.started = false;
-      this.strikes = 0;
-      this.score = 0;
-      this.gameOver = false;
-      this.started = false;
-      createjs.Ticker.reset();
+      // this.started = false;
+      // this.strikes = 0;
+      // this.score = 0;
+      // this.gameOver = false;
+      // this.started = false;
       // this.stage.addChild(scoreBoard);
       this.handleComplete();
-      debugger;
     }
   }]);
 
@@ -266,7 +219,7 @@ exports.default = Game;
 // does logic of checking being sliced, point system and points, as well as difficulty
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -298,8 +251,8 @@ var Sliceable = function () {
     value: function mapSliceableImg(width, height, number) {
       for (var i = 0; i < number; i++) {
         circles.push(new createjs.Shape());
-        circles[i].graphics.beginFill("red").drawCircle(0, 0, 50);
-        // circles[i].alpha = 0;
+        circles[i].graphics.beginFill("black").drawCircle(0, 0, 50);
+        circles[i].alpha = 0;
         circles[i].x = Math.random() * width;
         circles[i].y = 550;
       }
@@ -311,8 +264,7 @@ var Sliceable = function () {
       this.circles = {};
       for (var i = 0; i < difficulty; i++) {
         this.circles[i] = new createjs.Shape();
-        // console.log(this.circles[i].x);
-        // console.log(this.circles[i].y);
+
         this.circles[i].graphics.beginFill("red").drawCircle(radius, radius, radius);
         this.circles[i].alpha = 0;
         this.circles[i].type = this.determineSliceable();
@@ -343,7 +295,7 @@ var Sliceable = function () {
 exports.default = Sliceable;
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -355,7 +307,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _sliceable = __webpack_require__(2);
+var _sliceable = __webpack_require__(1);
 
 var _sliceable2 = _interopRequireDefault(_sliceable);
 
@@ -391,14 +343,11 @@ var Sliceables = function () {
     this.reset = this.reset.bind(this);
     this.sliceable = new _sliceable2.default(loader);
     this.playSound = this.playSound.bind(this);
-    console.log('this.strikes in sliceables', this.strikes);
   }
 
   _createClass(Sliceables, [{
-    key: 'generateSliceables',
+    key: "generateSliceables",
     value: function generateSliceables() {
-      var _this = this;
-
       var self = this;
 
       if (Object.keys(this.circles).length <= this.frequency) {
@@ -407,10 +356,7 @@ var Sliceables = function () {
       createjs.Ticker.addEventListener("tick", this.tick);
       // add amount by frequency, start from previous end frequency
       Object.keys(this.circles).slice(this.beginCounter, this.frequency).forEach(function (id, index) {
-        console.log("counter", _this.beginCounter);
-        console.log("id", id);
 
-        // console.log("beginCounter:", self.beginCounter, "Frequency", this.frequency);
         // set time interval for each Sliceables
         self.stage.addChild(self.circles[id]);
         self.stage.addChild(self.circles[id].shape);
@@ -425,7 +371,7 @@ var Sliceables = function () {
       this.beginCounter += this.frequency;
     }
   }, {
-    key: 'handleSliceables',
+    key: "handleSliceables",
     value: function handleSliceables(circle, time) {
       if (circle) {
         var randomPow = Math.round(Math.random() * 3);
@@ -438,7 +384,7 @@ var Sliceables = function () {
       }
     }
   }, {
-    key: 'createSliceables',
+    key: "createSliceables",
     value: function createSliceables(width, difficulty) {
       this.circles = {};
       var radius = this.radius;
@@ -456,27 +402,27 @@ var Sliceables = function () {
       createjs.Ticker.addEventListener("tick", this.tick);
     }
   }, {
-    key: 'tick',
+    key: "tick",
     value: function tick(event) {
-      var _this2 = this;
+      var _this = this;
 
       var self = this;
       Object.keys(this.circles).forEach(function (id) {
         var pt = self.circles[id].globalToLocal(self.stage.mouseX, self.stage.mouseY);
 
-        self.circles[id].alpha = 0.2;
+        // self.circles[id].alpha = 0;
 
-        _this2.checkOutOfBounds(id);
-        _this2.checkCollision(pt, id);
+        _this.checkOutOfBounds(id);
+        _this.checkCollision(pt, id);
       });
       self.stage.update();
     }
   }, {
-    key: 'checkOutOfBounds',
+    key: "checkOutOfBounds",
     value: function checkOutOfBounds(id) {
       if (this.circles[id].x + 30 > this.width + 50 || this.circles[id].y > this.height + 50) {
         this.strikes += 1;
-        this.strikesField.text = 'Strikes: ' + this.strikes;
+        this.strikesField.text = "Strikes: " + this.strikes;
         if (this.strikes >= 3) {
           var gameOverImg = new createjs.Bitmap(this.loader.getResult("game_over"));
           this.stage.addChild(gameOverImg);
@@ -490,11 +436,11 @@ var Sliceables = function () {
       }
     }
   }, {
-    key: 'checkCollision',
+    key: "checkCollision",
     value: function checkCollision(pt, id) {
       if (this.circles[id] && this.stage.mouseInBounds && this.circles[id].hitTest(pt.x, pt.y)) {
         this.score += 1;
-        this.scoreField.text = 'Score: ' + this.score;
+        this.scoreField.text = "Score: " + this.score;
         // this.circles[id].alpha = 1;
         this.circles[id].mouseEnabled = false;
         this.stage.removeChild(this.circles[id].shape);
@@ -505,7 +451,7 @@ var Sliceables = function () {
       }
     }
   }, {
-    key: 'playSound',
+    key: "playSound",
     value: function playSound(type) {
       if ("splatter") {
         createjs.Sound.play("splatter_sound", { volume: 0.025 });
@@ -514,7 +460,7 @@ var Sliceables = function () {
       }
     }
   }, {
-    key: 'reset',
+    key: "reset",
     value: function reset() {}
   }]);
 
@@ -524,13 +470,46 @@ var Sliceables = function () {
 exports.default = Sliceables;
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(0);
-(function webpackMissingModule() { throw new Error("Cannot find module \"server\""); }());
-(function webpackMissingModule() { throw new Error("Cannot find module \"start\""); }());
+"use strict";
 
+
+var _game = __webpack_require__(0);
+
+var _game2 = _interopRequireDefault(_game);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+document.addEventListener('DOMContentLoaded', function () {
+  var manifest = [{ src: "bomb-explode.ogg", id: "boom_sound" }, { src: "splatter.ogg", id: "splatter_sound" }, { src: "throw-fruit.ogg", id: "throw_sound" }, { src: "game_over.png", id: "game_over" }, { src: "new-game.png", id: "new-game" }, { src: "pineapple.png", id: "pineapple" }, { src: "splash.png", id: "splash" }, { src: "watermelon.png", id: "watermelon" }, { src: "x.png", id: "x" }, { src: "xf.png", id: "xf" }, { src: "xx.png", id: "xx" }, { src: "xxf.png", id: "xxf" }, { src: "xxx.png", id: "xxx" }, { src: "xxxf.png", id: "xxxf" }, { src: "background.jpg", id: "background" }];
+
+  var sliceables = [{ src: "apple-1.png", id: "apple_1" }, { src: "apple-2.png", id: "apple_2" }, { src: "apple.png", id: "apple" }, { src: "banana-1.png", id: "banana_1" }, { src: "banana-2.png", id: "banana_2" }, { src: "banana.png", id: "banana" }, { src: "peach-1.png", id: "peach_1" }, { src: "peach-2.png", id: "peach_2" }, { src: "peach.png", id: "peach" }, { src: "strawberry-1.png", id: "strawberry_1" }, { src: "strawberry-2.png", id: "strawberry_2" }, { src: "strawberry.png", id: "strawberry" }, { src: "watermelon-1.png", id: "watermelon_1" }, { src: "watermelon-2.png", id: "watermelon_2" }, { src: "watermelon.png", id: "watermelon" }, { src: "bomb.png", id: "bomb" }];
+  var mute = false;
+  var muteBtn = document.getElementById("mute-btn");
+  muteBtn.addEventListener('click', toggleMute);
+  muteBtn.addEventListener('keydown', toggleMute);
+
+  var toggleMute = function toggleMute(e) {
+    e.preventDefault();
+    if (e.keyCode >= 0) {
+      return;
+    }
+    if (mute) {
+      mute = false;
+      createjs.Sound.muted = false;
+      muteBtn.className = "";
+    } else {
+      mute = true;
+      createjs.Sound.muted = true;
+      muteBtn.className = "unmute";
+    }
+  };
+  var stage = new createjs.Stage("boardCanvas");
+  var game = new _game2.default(stage, manifest, sliceables);
+  game.start();
+});
 
 /***/ })
 /******/ ]);
