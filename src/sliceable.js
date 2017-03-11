@@ -25,7 +25,7 @@ export default class Sliceable {
   generateSliceables (width, difficulty){
     let radius = this.radius;
     this.circles = {};
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < difficulty; i++) {
       this.circles[i] = new createjs.Shape();
 
       this.circles[i].graphics.beginFill("black").drawCircle(radius, radius,radius);
@@ -38,9 +38,12 @@ export default class Sliceable {
       this.initializeProperties(i);
 
       this.circles[i].snapToPixel = true;
-      // this.circles[i].model.snapToPixel = true;
+      this.circles[i].model.snapToPixel = true;
       this.circles[i].cache(0, 0, radius * 2, radius * 2)
+      console.log("i, ", i);
+      console.log("id, ", this.circles[i].id);
     }
+    console.log("circles, ", this.circles);
     createjs.Ticker.setFPS(60);
     return this.circles;
   }

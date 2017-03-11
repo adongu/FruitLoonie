@@ -16,71 +16,66 @@ export default class Sliceables {
     this.strikes = 0;
     this.loader = loader;
     // amount of objects per cycle;
-    this.frequency = 10;
+    this.sliceable = new Sliceable(loader);
     this.stageSliceables = this.stageSliceables.bind(this);
-    // this.tick = this.tick.bind(this);
-    // this.createSliceables = this.createSliceables.bind(this);
+    this.createSliceables = this.createSliceables.bind(this);
     this.moveSliceables = this.moveSliceables.bind(this);
     this.checkOutOfBounds = this.checkOutOfBounds.bind(this);
     this.checkCollision = this.checkCollision.bind(this);
-    this.sliceable = new Sliceable(loader);
     this.playSound = this.playSound.bind(this);
     this.stagedCirclesIds = this.stagedCirclesIds.bind(this);
   }
 
   stageSliceables() {
-    let self = this;
     // number of circles to add
     let numCircles = 0;
     let stagedCirclesIds = this.stagedCirclesIds();
-
-    Object.keys(this.circles).forEach( (id, index) => {
+    let id = 0;
       // check for unstaged circles
-      if ( stagedCirclesIds.indexOf(self.circles[id]) === -1 ) {
-        self.stage.addChild(self.circles[id]);
-        self.stage.addChild(self.circles[id].model);
-        self.stage.update();
-
+      console.log(stagedCirclesIds);
+    while( numCircles < this.minimumSliceables ) {
+      if ( stagedCirclesIds.indexOf(this.circles[id].id) === -1 ) {
+        console.log(id);
+        this.stage.addChild(this.circles[id]);
+        this.stage.addChild(this.circles[id].model);
         createjs.Sound.play("throw_sound", {volume: 0.025});
+        stagedCirclesIds.push(id)
+        numCircles += 1;
+        this.stage.update();
       }
-    });
+      id += 1;
+    }
+    this.stage.update();
   }
   // array of staged circle ids
   stagedCirclesIds() {
-    return this.stage.children.filter((child) => {
-      if (child.type) {
-        return child.id;
-      }
+    let circles = this.stage.children.filter((child) => {
+      // child is circle if it has type property
+      return child.type ? true : false;
+
     });
+    return circles.map( circle => { return circle.cacheID - 1 })
   }
 
   moveSliceables() {
+    let self = this;
     let stagedCirclesIds = this.stagedCirclesIds();
-    // if (circle) {
-      // let randomPow = Math.round(Math.random() * 3)
-      // createjs.Tween.get(circle)
-      // .to({guide:{ path:[120, 480, 220, 160, 340, 160, 500, 320, 580, 550] }}, 5000, createjs.Ease.getPowOut(randomPow));
-      //
-      // createjs.Tween.get(circle.model)
-      // .to({guide:{ path:[120, 480, 220, 160, 340, 160, 500, 320, 580, 550] }}, 5000, createjs.Ease.getPowOut(randomPow));
+    if (stagedCirclesIds.length > 0) {
       stagedCirclesIds.forEach( id => {
-      // set time interval for each Sliceables
-      // self.stage.addChild(self.circles[id]);
-      // self.stage.addChild(self.circles[id].model);
+        let deltaX = self.projectileMotionX(self.circles[id].x);
+        let deltaY = self.projectileMotionY(self.circles[id].x);
 
-      let deltaX = this.projectileMotionX(this.circles[id].x);
-      let deltaY = this.projectileMotionY(this.circles[id].x);
+        self.circles[id].x += deltaX;
+        self.circles[id].model.x += deltaX;
+        self.circles[id].y += deltaY;
+        self.circles[id].model.y += deltaY;
 
-      this.circles[id].x += deltaX;
-      this.circles[id].model.x += deltaX;
-      this.circles[id].y += deltaY;
-      this.circles[id].model.y += deltaY;
-
-      // this.handleSliceables(this.circles[id], time)
+        // self.handleSliceables(self.circles[id], time)
+        self.stage.update();
+        // }
+      });
       this.stage.update();
-      // }
-    });
-    this.stage.update();
+    }
   }
 
   projectileMotionX(x) {
