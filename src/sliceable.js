@@ -25,11 +25,11 @@ export default class Sliceable {
   generateSliceables (width, difficulty){
     let radius = this.radius;
     this.circles = {};
-    for (let i = 0; i < difficulty; i++) {
+    for (let i = 0; i < 2; i++) {
       this.circles[i] = new createjs.Shape();
 
-      this.circles[i].graphics.beginFill("red").drawCircle(radius, radius,radius);
-      this.circles[i].alpha = 1;
+      this.circles[i].graphics.beginFill("black").drawCircle(radius, radius,radius);
+      this.circles[i].alpha = 0;
       this.circles[i].type = this.determineSliceable();
       // for checking times out of border length, 1 for creating, 2 to unstage
       this.circles[i].outOfBoundsTimes = 0;

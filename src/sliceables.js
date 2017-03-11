@@ -19,12 +19,12 @@ export default class Sliceables {
     this.stageSliceables = this.stageSliceables.bind(this);
     // this.tick = this.tick.bind(this);
     // this.createSliceables = this.createSliceables.bind(this);
-    // this.handleSliceables = this.handleSliceables.bind(this);
+    this.moveSliceables = this.moveSliceables.bind(this);
     this.checkOutOfBounds = this.checkOutOfBounds.bind(this);
     this.checkCollision = this.checkCollision.bind(this);
-    // this.reset = this.reset.bind(this);
     this.sliceable = new Sliceable(loader);
     this.playSound = this.playSound.bind(this);
+
   }
 
   stageSliceables() {
@@ -41,11 +41,11 @@ export default class Sliceables {
       self.stage.addChild(self.circles[id]);
       self.stage.addChild(self.circles[id].model);
       // self.handleSliceables(self.circles[id], time)
-      console.log("x", self.circles[id].x);
-      console.log("y", self.circles[id].y);
       self.stage.update();
       // }
       createjs.Sound.play("throw_sound", {volume: 0.025});
+      console.log("x,", this.circles[id].x);
+      console.log("y,", this.circles[id].y);
     });
   }
 
@@ -63,30 +63,29 @@ export default class Sliceables {
       // self.stage.addChild(self.circles[id]);
       // self.stage.addChild(self.circles[id].model);
 
-      let deltaX = projectileMotionX(self.circles[id].x);
-      let deltaY = projectileMotionY(self.circles[id].y);
+      let deltaX = this.projectileMotionX(this.circles[id].x);
+      let deltaY = this.projectileMotionY(this.circles[id].x);
 
-      self.circles[id].x += deltaX;
-      self.circles[id].model.x += deltaX;
-      self.circles[id].y += deltaY;
-      self.circles[id].model.y += deltaY;
+      this.circles[id].x += deltaX;
+      this.circles[id].model.x += deltaX;
+      this.circles[id].y += deltaY;
+      this.circles[id].model.y += deltaY;
 
-      // self.handleSliceables(self.circles[id], time)
-      self.stage.update();
+      // this.handleSliceables(this.circles[id], time)
+      this.stage.update();
       // }
     });
-    // this.stage.update();
-    // }
+    this.stage.update();
   }
 
   projectileMotionX(x) {
-    return 0.2;
+    return 2;
   }
-  projectileMotionY(y) {
-    if (y <= 320) {
-      return -0.13333333;
+  projectileMotionY(x) {
+    if (x <= 320) {
+      return -2.6333333*Math.pow(x,2)/100000 - 2;
     } else {
-      return 0.13333333;
+      return 2.633333*Math.pow(x,2)/100000 + 2;
     }
   }
 

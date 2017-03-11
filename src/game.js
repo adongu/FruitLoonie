@@ -46,7 +46,7 @@ export default class Game {
     document.onkeydown = () => {
       this.handleKeys(event);
     }
-    // createjs.Ticker.addEventListener("tick", this.tick);
+    createjs.Ticker.addEventListener("tick", this.tick);
   }
 
   createFields() {
@@ -81,7 +81,7 @@ export default class Game {
   //     // let pt = self.circles[id].globalToLocal(self.stage.mouseX, self.stage.mouseY);
   //
   //     // self.circles[id].alpha = 0;
-    this.sliceables.move();
+    (event) => this.sliceables.moveSliceables();
   //     // this.checkOutOfBounds(id)
   //     // this.checkCollision(pt, id)
   //   // })
