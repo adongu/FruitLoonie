@@ -21,13 +21,13 @@ export default class Game {
     this.loader = new createjs.LoadQueue(false);
     this.loader.installPlugin(createjs.Sound);
     createjs.MotionGuidePlugin.install();
-    this.sliceables = new Sliceables(this.stage, this.difficulty, this.loader, this.scoreField, this.strikesField);
+    this.sliceables = new Sliceables(this.stage, this.difficulty, this.loader);
     this.tick = this.tick.bind(this);
 
     // this.createFields = this.createFields.bind(this);
     this.handleComplete = this.handleComplete.bind(this);
     // this.handleKeys = this.handleKeys.bind(this);
-    // this.handlePlay = this.handlePlay.bind(this);
+    this.handlePlay = this.handlePlay.bind(this);
     // this.restart = this.restart.bind(this);
   };
 
@@ -68,13 +68,11 @@ export default class Game {
     if (!this.pause && !this.gameOver) {
       this.sliceables.stageSliceables();
     }
-    // else if (!this.gameOver) {
-    //   this.checkGameOver();
-    //   // this.handlePlay();
-    // }
+    // setInterval(this.handlePlay, 5000);
   }
 
   tick(event) {
+    // let deltaS = event.delta / 1000;
   //   let self = this;
   //   // Object.keys(this.circles).forEach((id) =>{
   //     // let pt = self.circles[id].globalToLocal(self.stage.mouseX, self.stage.mouseY);

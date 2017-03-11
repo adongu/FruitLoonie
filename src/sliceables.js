@@ -2,14 +2,15 @@ import Sliceable from './sliceable';
 
 export default class Sliceables {
 
-  constructor (stage, difficulty, loader, scoreField, strikesField, gameOver) {
+  constructor (stage, difficulty, loader) {
     this.circles = {};
     this.stage = stage;
     this.width = this.stage.canvas.width;
     this.height = this.stage.canvas.height;
     this.radius = 50;
     this.beginCounter = 0;
-    this.velocity =
+    this.velocity = 1.5;
+    this.minimumSliceables = 2;
     this.gravity = 4;
     this.score = 0
     this.strikes = 0;
@@ -24,32 +25,37 @@ export default class Sliceables {
     this.checkCollision = this.checkCollision.bind(this);
     this.sliceable = new Sliceable(loader);
     this.playSound = this.playSound.bind(this);
-
+    this.stagedCirclesIds = this.stagedCirclesIds.bind(this);
   }
 
   stageSliceables() {
     let self = this;
-    // this.circles = this.sliceable.createSliceables(this.width, this.difficulty);
-    if (Object.keys(this.circles).length <= this.frequency) {
+    // number of circles to add
+    let numCircles = 0;
+    let stagedCirclesIds = this.stagedCirclesIds();
 
-    }
-    // createjs.Ticker.addEventListener("tick", this.tick);
-    // add amount by frequency, start from previous end frequency
-    Object.keys(this.circles).slice(this.beginCounter, this.frequency).forEach( (id, index) => {
+    Object.keys(this.circles).forEach( (id, index) => {
+      // check for unstaged circles
+      if ( stagedCirclesIds.indexOf(self.circles[id]) === -1 ) {
+        self.stage.addChild(self.circles[id]);
+        self.stage.addChild(self.circles[id].model);
+        self.stage.update();
 
-      // set time interval for each Sliceables
-      self.stage.addChild(self.circles[id]);
-      self.stage.addChild(self.circles[id].model);
-      // self.handleSliceables(self.circles[id], time)
-      self.stage.update();
-      // }
-      createjs.Sound.play("throw_sound", {volume: 0.025});
-      console.log("x,", this.circles[id].x);
-      console.log("y,", this.circles[id].y);
+        createjs.Sound.play("throw_sound", {volume: 0.025});
+      }
+    });
+  }
+  // array of staged circle ids
+  stagedCirclesIds() {
+    return this.stage.children.filter((child) => {
+      if (child.type) {
+        return child.id;
+      }
     });
   }
 
-  moveSliceables(circle, time) {
+  moveSliceables() {
+    let stagedCirclesIds = this.stagedCirclesIds();
     // if (circle) {
       // let randomPow = Math.round(Math.random() * 3)
       // createjs.Tween.get(circle)
@@ -57,8 +63,7 @@ export default class Sliceables {
       //
       // createjs.Tween.get(circle.model)
       // .to({guide:{ path:[120, 480, 220, 160, 340, 160, 500, 320, 580, 550] }}, 5000, createjs.Ease.getPowOut(randomPow));
-    Object.keys(this.circles).slice(this.beginCounter, this.frequency).forEach( (id, index) => {
-
+      stagedCirclesIds.forEach( id => {
       // set time interval for each Sliceables
       // self.stage.addChild(self.circles[id]);
       // self.stage.addChild(self.circles[id].model);
@@ -79,32 +84,19 @@ export default class Sliceables {
   }
 
   projectileMotionX(x) {
-    return 2;
+    return 2*this.velocity;
   }
+
   projectileMotionY(x) {
     if (x <= 320) {
-      return -2.6333333*Math.pow(x,2)/100000 - 2;
+      return -.26333333*Math.pow(x,2)/100000 - 2;
     } else {
-      return 2.633333*Math.pow(x,2)/100000 + 2;
+      return .2633333*Math.pow(x,2)/100000 + 2;
     }
   }
 
   createSliceables (width, difficulty){
     this.circles = this.sliceable.generateSliceables(width, difficulty);
-    // let radius = this.radius;
-    //
-    // for (let i = 0; i < difficulty; i++) {
-    //   this.circles[i] = new createjs.Shape();
-    //   this.circles[i].graphics.beginFill("red").drawCircle(0,0,radius);
-    //   circles[i].alpha = 1;
-    //   this.circles[i].x = Math.random() * width;
-    //   this.circles[i].y = 480
-    //
-    //   this.circles[i].snapToPixel = true;
-    //   this.circles[i].cache(-radius, -radius, radius * 2, radius * 2)
-    // }
-    // createjs.Ticker.setFPS(60);
-    // createjs.Ticker.addEventListener("tick", this.tick);
   }
 
   checkOutOfBounds(id) {
