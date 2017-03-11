@@ -40,9 +40,9 @@ export default class Game {
   handleComplete () {
     let background = new createjs.Bitmap(this.loader.getResult("background"));
     this.stage.addChild(background);
-    this.stage.update();
-    this.sliceables.createSliceables(this.width, this.difficulty);
+    this.sliceables.createSliceables(this.width);
     this.createFields("scoreField", "strikesField");
+    this.stage.update();
     document.onkeydown = () => {
       this.handleKeys(event);
     }
@@ -95,7 +95,7 @@ export default class Game {
     } else if ( e.keyCode === 13 && !this.started){
       createjs.Ticker.addEventListener("tick", this.tick);
       this.handlePlay();
-      setInterval(this.handlePlay, 3000);
+      setInterval(this.handlePlay, 2000);
       this.started = true
     } else if ( e.keyCode === 13 && this.strikes >= 3) {
       this.restart();

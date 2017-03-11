@@ -10,7 +10,8 @@ export default class Sliceables {
     this.radius = 50;
     this.beginCounter = 0;
     this.velocity = 1.5;
-    this.minimumSliceables = 2;
+    this.minimumSliceables = 4;
+    this.difficulty = difficulty;
     this.gravity = 4;
     this.score = 0
     this.strikes = 0;
@@ -31,21 +32,23 @@ export default class Sliceables {
     let numCircles = 0;
     let stagedCirclesIds = this.stagedCirclesIds();
     let id = 0;
+    console.log(stagedCirclesIds);
+    console.log(Object.keys(this.circles).length);
       // check for unstaged circles
-    while( numCircles < this.minimumSliceables ) {
-      if ( stagedCirclesIds.indexOf(id) === -1 ) {
-        console.log(stagedCirclesIds);
-        console.log(this.circles[id].id);
-        this.stage.addChild(this.circles[id]);
-        this.stage.addChild(this.circles[id].model);
-        createjs.Sound.play("throw_sound", {volume: 0.025});
-        stagedCirclesIds.push(id)
-        numCircles += 1;
+    if (stagedCirclesIds && stagedCirclesIds.length + this.minimumSliceables <= this.difficulty) {
+      while( numCircles < this.minimumSliceables ) {
+        if ( stagedCirclesIds.indexOf(id) === -1 ) {
+          this.stage.addChild(this.circles[id]);
+          this.stage.addChild(this.circles[id].model);
+          createjs.Sound.play("throw_sound", {volume: 0.025});
+          stagedCirclesIds.push(id)
+          numCircles += 1;
+        }
         this.stage.update();
+        id += 1;
       }
-      id += 1;
+      this.stage.update();
     }
-    this.stage.update();
   }
   // array of staged circle ids
   stagedCirclesIds() {
@@ -73,8 +76,8 @@ export default class Sliceables {
         self.stage.update();
         // }
       });
-      this.stage.update();
     }
+    this.stage.update();
   }
 
   projectileMotionX(x) {
@@ -89,8 +92,8 @@ export default class Sliceables {
     }
   }
 
-  createSliceables (width, difficulty){
-    this.circles = this.sliceable.generateSliceables(width, difficulty);
+  createSliceables (width){
+    this.circles = this.sliceable.generateSliceables(width, this.difficulty);
   }
 
   checkOutOfBounds(id) {

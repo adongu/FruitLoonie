@@ -41,7 +41,7 @@ export default class Sliceable {
       this.circles[i].model.snapToPixel = true;
       this.circles[i].cache(0, 0, radius * 2, radius * 2)
       console.log("i, ", i);
-      console.log("id, ", this.circles[i].id);
+      console.log("id, ", this.circles[i].cacheID-1);
     }
     console.log("circles, ", this.circles);
     createjs.Ticker.setFPS(60);
