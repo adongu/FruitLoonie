@@ -32,10 +32,10 @@ export default class Sliceables {
     let stagedCirclesIds = this.stagedCirclesIds();
     let id = 0;
       // check for unstaged circles
-      console.log(stagedCirclesIds);
     while( numCircles < this.minimumSliceables ) {
-      if ( stagedCirclesIds.indexOf(this.circles[id].id) === -1 ) {
-        console.log(id);
+      if ( stagedCirclesIds.indexOf(id) === -1 ) {
+        console.log(stagedCirclesIds);
+        console.log(this.circles[id].id);
         this.stage.addChild(this.circles[id]);
         this.stage.addChild(this.circles[id].model);
         createjs.Sound.play("throw_sound", {volume: 0.025});
@@ -52,7 +52,6 @@ export default class Sliceables {
     let circles = this.stage.children.filter((child) => {
       // child is circle if it has type property
       return child.type ? true : false;
-
     });
     return circles.map( circle => { return circle.cacheID - 1 })
   }
