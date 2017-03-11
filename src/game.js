@@ -46,7 +46,6 @@ export default class Game {
     document.onkeydown = () => {
       this.handleKeys(event);
     }
-    createjs.Ticker.addEventListener("tick", this.tick);
   }
 
   createFields() {
@@ -81,7 +80,7 @@ export default class Game {
   //     // let pt = self.circles[id].globalToLocal(self.stage.mouseX, self.stage.mouseY);
   //
   //     // self.circles[id].alpha = 0;
-    (event) => this.sliceables.moveSliceables();
+    this.sliceables.moveSliceables();
   //     // this.checkOutOfBounds(id)
   //     // this.checkCollision(pt, id)
   //   // })
@@ -96,6 +95,7 @@ export default class Game {
       this.pause = !this.pause;
       this.stage.mouseEnabled = (!this.pause);
     } else if ( e.keyCode === 13 && !this.started){
+      createjs.Ticker.addEventListener("tick", this.tick);
       this.handlePlay();
       this.started = true
     } else if ( e.keyCode === 13 && this.strikes >= 3) {
