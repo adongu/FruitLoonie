@@ -22,11 +22,13 @@ export default class Game {
     this.loader.installPlugin(createjs.Sound);
     createjs.MotionGuidePlugin.install();
     this.sliceables = new Sliceables(this.stage, this.difficulty, this.loader, this.scoreField, this.strikesField);
-    this.createFields = this.createFields.bind(this);
+    this.tick = this.tick.bind(this);
+
+    // this.createFields = this.createFields.bind(this);
     this.handleComplete = this.handleComplete.bind(this);
-    this.handleKeys = this.handleKeys.bind(this);
-    this.handlePlay = this.handlePlay.bind(this);
-    this.restart = this.restart.bind(this);
+    // this.handleKeys = this.handleKeys.bind(this);
+    // this.handlePlay = this.handlePlay.bind(this);
+    // this.restart = this.restart.bind(this);
   };
 
   start () {
@@ -39,10 +41,12 @@ export default class Game {
     let background = new createjs.Bitmap(this.loader.getResult("background"));
     this.stage.addChild(background);
     this.stage.update();
+    this.sliceables.createSliceables(this.width, this.difficulty);
+    this.createFields("scoreField", "strikesField");
     document.onkeydown = () => {
       this.handleKeys(event);
     }
-    this.createFields("scoreField", "strikesField");
+    // createjs.Ticker.addEventListener("tick", this.tick);
   }
 
   createFields() {
@@ -63,11 +67,7 @@ export default class Game {
 
   handlePlay () {
     if (!this.pause && !this.gameOver) {
-      this.sliceables.generateSliceables();
-      this.sliceables.strikes
-      setInterval( () => {
-        this.handlePlay();
-      }, 2000);
+      this.sliceables.stageSliceables();
     }
     // else if (!this.gameOver) {
     //   this.checkGameOver();
@@ -75,12 +75,18 @@ export default class Game {
     // }
   }
 
-  // checkGameOver() {
-  //   if (this.strikesField.text.split(": ").slice(1)*1 >=3 ) {
-  //     this.gameOver = true;
-  //     this.restart();
-  //   }
-  // }
+  tick(event) {
+  //   let self = this;
+  //   // Object.keys(this.circles).forEach((id) =>{
+  //     // let pt = self.circles[id].globalToLocal(self.stage.mouseX, self.stage.mouseY);
+  //
+  //     // self.circles[id].alpha = 0;
+    this.sliceables.move();
+  //     // this.checkOutOfBounds(id)
+  //     // this.checkCollision(pt, id)
+  //   // })
+  //   self.stage.update();
+  }
 
   handleKeys (e) {
     this.strikes = this.strikesField.text.split(": ").slice(1)*1
@@ -109,5 +115,3 @@ export default class Game {
   }
 
 };
-
-  // does logic of checking being sliced, point system and points, as well as difficulty

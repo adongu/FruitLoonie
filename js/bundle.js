@@ -161,7 +161,7 @@ var Game = function () {
       var _this2 = this;
 
       if (!this.pause && !this.gameOver) {
-        this.sliceables.generateSliceables();
+        this.sliceables.stageSliceables();
         this.sliceables.strikes;
         setInterval(function () {
           _this2.handlePlay();
@@ -333,7 +333,7 @@ var Sliceables = function () {
     // amount of objects per cycle;
     this.frequency = 10;
     this.difficulty = difficulty;
-    this.generateSliceables = this.generateSliceables.bind(this);
+    this.stageSliceables = this.stageSliceables.bind(this);
     // this.bezierEasing = this.bezierEasing.bind(this);
     this.tick = this.tick.bind(this);
     this.createSliceables = this.createSliceables.bind(this);
@@ -346,8 +346,8 @@ var Sliceables = function () {
   }
 
   _createClass(Sliceables, [{
-    key: "generateSliceables",
-    value: function generateSliceables() {
+    key: "stageSliceables",
+    value: function stageSliceables() {
       var self = this;
 
       if (Object.keys(this.circles).length <= this.frequency) {
