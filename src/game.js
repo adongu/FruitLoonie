@@ -78,7 +78,7 @@ export default class Game {
   //     // let pt = self.circles[id].globalToLocal(self.stage.mouseX, self.stage.mouseY);
   //
   //     // self.circles[id].alpha = 0;
-    // this.sliceables.moveSliceables();
+    this.sliceables.moveSliceables();
   //     // this.checkOutOfBounds(id)
   //     // this.checkCollision(pt, id)
   //   // })
@@ -95,7 +95,7 @@ export default class Game {
     } else if ( e.keyCode === 13 && !this.started){
       createjs.Ticker.addEventListener("tick", this.tick);
       this.handlePlay();
-      setInterval(this.handlePlay, 2000);
+      setInterval(this.handlePlay, 1500);
       this.started = true
     } else if ( e.keyCode === 13 && this.strikes >= 3) {
       this.restart();

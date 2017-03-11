@@ -32,9 +32,7 @@ export default class Sliceables {
     let numCircles = 0;
     let stagedCirclesIds = this.stagedCirclesIds();
     let id = 0;
-    console.log(stagedCirclesIds);
-    console.log(Object.keys(this.circles).length);
-      // check for unstaged circles
+      // check for unstaged circles, make sure doesn't stage more than created
     if (stagedCirclesIds && stagedCirclesIds.length + this.minimumSliceables <= this.difficulty) {
       while( numCircles < this.minimumSliceables ) {
         if ( stagedCirclesIds.indexOf(id) === -1 ) {

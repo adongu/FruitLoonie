@@ -10,18 +10,6 @@ export default class Sliceable {
     this.initializeProperties = this.initializeProperties.bind(this);
   }
 
-  // mapSliceableImg(width, height, number){
-  //   for (var i = 0; i < number; i++) {
-  //     circles.push(new createjs.Shape())
-  //       circles[i].graphics.beginFill("black").drawCircle(0,0,50);
-  //       circles[i].alpha = 1;
-  //       // circles[i].x = Math.random() * width;
-  //       circles[i].x = 200;
-  //       circles[i].y = 400;
-  //   }
-  //
-  // }
-
   generateSliceables (width, difficulty){
     let radius = this.radius;
     this.circles = {};
@@ -40,10 +28,7 @@ export default class Sliceable {
       this.circles[i].snapToPixel = true;
       this.circles[i].model.snapToPixel = true;
       this.circles[i].cache(0, 0, radius * 2, radius * 2)
-      console.log("i, ", i);
-      console.log("id, ", this.circles[i].cacheID-1);
     }
-    console.log("circles, ", this.circles);
     createjs.Ticker.setFPS(60);
     return this.circles;
   }
