@@ -1,0 +1,66 @@
+.game__cutting-board-box{
+  border: 1px solid orange;
+  max-width: 640px;
+  height: 480px;
+  display: flex;
+  position: relative;
+  margin: auto;
+  width: 100%
+}
+
+.title {
+  font-size: 32px;
+}
+
+.game__cutting-board {
+  margin: auto;
+  font-size: 32px;
+  color: red;
+  height: auto;
+  /*width: 480px;*/
+  cursor: pointer;
+}
+
+canvas {
+  width: 100%;
+}
+
+#mute-btn:hover {
+  position: absolute;
+  cursor: pointer;
+  text-shadow: 1px 1px 1px aliceblue;
+  /*transform: scale(2);*/
+  /*transition: transform .5s ease-in;*/
+  /*left: 50%;*/
+  right: 0;
+  top: 5%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#mute-btn {
+  font-family: Metal Mania;
+  position: absolute;
+  left: 47%;
+  right: 0;
+  top: 5%;
+  /*right: 0;*/
+  margin-left: auto;
+  margin-right: auto;
+  width: 640px;
+  font: 18px;
+  color: white;
+  letter-spacing: 3px;
+  /*z-index: 1;*/
+}
+
+#unmute:hover {
+  cursor: pointer;
+}
+#unmute {
+  font-family: Metal Mania;
+  font: 18px;
+  color: white;
+  position: absolute;
+  text-decoration: line-through;
+}

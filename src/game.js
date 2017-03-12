@@ -11,7 +11,7 @@ export default class Game {
     this.pause = false;
     this.started = false;
     this.gameOver = false;
-    this.difficulty = 20;
+    this.difficulty = 40;
     this.score = 0;
     this.strikes = 0;
     this.scoreField = new createjs.Text(`Score: ${this.score}`, "bold 18px Arial", "#f70");
@@ -34,18 +34,19 @@ export default class Game {
   };
 
   start () {
-    this.loader.addEventListener("complete", this.handleComplete);
     this.loader.loadManifest(this.manifest, true, "./assets/game/")
     this.loader.loadManifest(this.sliceableImgs, true, "./assets/sliceables/")
+    this.loader.addEventListener("complete", this.handleComplete);
   }
 
   handleComplete () {
     this.backGround = new createjs.Bitmap(this.loader.getResult("background"));
     this.gameOverImg = new createjs.Bitmap(this.loader.getResult("game_over"));
-
     this.stage.addChild(this.backGround);
-    this.sliceables.createSliceables(this.width);
     this.createFields();
+    if (!this.sliceables.anySliceables()) {
+      this.sliceables.createSliceables(this.width);
+    }
     this.stage.update();
     document.onkeydown = () => {
       this.handleKeys(event);
@@ -82,6 +83,7 @@ export default class Game {
   handlePlay () {
     if (!this.pause && !this.gameOver) {
       this.sliceables.stageSliceables();
+      console.log("hit");
     }
     // setInterval(this.handlePlay(), 4000);
   }
@@ -108,15 +110,23 @@ export default class Game {
       this.pause = !this.pause;
       this.stage.mouseEnabled = (!this.pause);
       // createjs.Ticker.setPaused = true;
-    } else if ( e.keyCode === 13 && !this.started){
+    } else if ( e.keyCode === 13 && (!this.started || this.gameOver)) {
       this.stage.removeChild(this.direction)
+      if (this.strikes >= 3) {
+        this.restart();
+      }
+      this.stage.removeChild(this.direction);
       createjs.Ticker.addEventListener("tick", this.tick);
       this.handlePlay();
-      setInterval(this.handlePlay, 1700);
-      this.started = true
-    } else if ( e.keyCode === 13 && this.strikes >= 3) {
-      this.restart();
+      // setInterval will stack
+      setTimeout(this.handlePlay, 1700);
+      this.started = true;
     }
+    // else if ( e.keyCode === 13 && this.strikes >= 3) {
+    //   createjs.Ticker.addEventListener("tick", this.tick);
+    //   this.handlePlay();
+    //   this.stage.removeChild(this.direction)
+    // }
   }
 
   updateStrikes() {
@@ -142,6 +152,7 @@ export default class Game {
 
   restart () {
     this.stage.removeAllChildren();
+    createjs.Ticker.removeEventListener("tick", this.tick);
     this.started = false;
     this.strikes = 0;
     this.score = 0;

@@ -25,6 +25,7 @@ export default class Sliceables {
     this.checkCollisions = this.checkCollisions.bind(this);
     this.playSound = this.playSound.bind(this);
     this.stagedCirclesIds = this.stagedCirclesIds.bind(this);
+    this.stagedCirclesIds = this.stagedCirclesIds.bind(this);
   }
 
   stageSliceables() {
@@ -40,6 +41,8 @@ export default class Sliceables {
           this.sliceable.initializeProperties(id, this.width)
           this.stage.addChild(this.circles[id]);
           this.stage.addChild(this.circles[id].model);
+          // bring to front
+          // stage.setChildIndex( displayObject, stage.getNumChildren()-1);
           createjs.Sound.play("throw_sound", {volume: 0.025});
           stagedCirclesIds.push(id)
           numCircles += 1;
@@ -135,6 +138,10 @@ export default class Sliceables {
       }
     });
     return score
+  }
+
+  anySliceables() {
+    return Object.keys(this.circles).length > 0;
   }
 
   playSound(type) {
