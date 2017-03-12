@@ -118,7 +118,7 @@ export default class Sliceables {
     return circles.map( circle => { return circle.cacheID - 1 })
   }
 
-  checkCollisions () {
+  checkCollisions() {
     let pt;
     let self = this;
     let score = 0;
@@ -126,7 +126,7 @@ export default class Sliceables {
       pt = this.circles[id].globalToLocal(this.stage.mouseX, this.stage.mouseY);
 // this.circles[id] && this.stage.mouseInBounds &&
       if (this.circles[id].hitTest(pt.x, pt.y) && this.circles) {
-        // playSound("splatter")
+        this.playSound("splatter")
         score += 1;
         this.circles[id].mouseEnabled = false;
         this.stage.removeChild(this.circles[id].model);
@@ -137,7 +137,7 @@ export default class Sliceables {
     return score
   }
 
-  playSound (type) {
+  playSound(type) {
     if ("splatter") {
       createjs.Sound.play("splatter_sound", {volume: 0.020});
     } else if ("throw") {
