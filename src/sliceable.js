@@ -20,7 +20,6 @@ export default class Sliceable {
       this.circles[i].alpha = 0;
       this.circles[i].type = this.determineSliceable();
       // for checking times out of border length, 1 for creating, 2 to unstage
-      this.circles[i].outOfBounds = false;
       this.circles[i].model = new createjs.Bitmap(this.loader.getResult(`${this.circles[i].type}`));
 
       this.initializeProperties(i);
@@ -38,6 +37,7 @@ export default class Sliceable {
     let y = 400;
     let angle = 45 + Math.random() * 10;
     let end = 580 + Math.random() + 50;
+    this.circles[i].outOfBounds = false;
 
     this.circles[i].x = x;
     this.circles[i].y = y;

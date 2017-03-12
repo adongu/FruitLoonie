@@ -36,6 +36,8 @@ export default class Sliceables {
     if (stagedCirclesIds && stagedCirclesIds.length + this.minimumSliceables <= this.difficulty) {
       while( numCircles < this.minimumSliceables ) {
         if ( stagedCirclesIds.indexOf(id) === -1 ) {
+          // this.circles[id].outOfBounds = false;
+          this.sliceable.initializeProperties(id, this.width)
           this.stage.addChild(this.circles[id]);
           this.stage.addChild(this.circles[id].model);
           createjs.Sound.play("throw_sound", {volume: 0.025});
@@ -90,19 +92,20 @@ export default class Sliceables {
   checkOutOfBounds(id) {
     let self = this;
     let strikes = 0;
-
-    stagedCirclesIds.forEach( id => {
-
-      if (this.circles[id].outOfBounds === false && this.circles[id].x > this.width/2 && this.circles.y > this.height) {
-        this.circles[id].outOfBounds = true;
+    this.stagedCirclesIds().forEach( id => {
+      // if greater than midpoint of canvas check if greater than width and height of canvas, doesn't check already out of bounds shapes
+      if ((self.circles[id].outOfBounds === false) && (self.circles[id].x > self.width / 2) && (self.circles[id].y > self.height || self.circles[id].x > self.width)) {
+        self.circles[id].outOfBounds = true;
         strikes += 1;
         self.stage.removeChild(self.circles[id])
         self.stage.removeChild(self.circles[id].model);
-        self.circles[id].outOfBounds = false;
-        this.stage.update();
+        console.log("outofBounds ", id);
+        self.stage.update();
         // this.circles[id].mouseEnabled = false;
       }
+      self.stage.update();
     })
+    return strikes;
   }
 
   stagedCirclesIds() {
@@ -126,7 +129,6 @@ export default class Sliceables {
       this.stage.update();
     }
   }
-
 
   playSound (type) {
     if ("splatter") {
