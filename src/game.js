@@ -16,6 +16,7 @@ export default class Game {
     this.strikes = 0;
     this.scoreField = new createjs.Text(`Score: ${this.score}`, "bold 18px Arial", "#f70");
     this.strikesField = new createjs.Text(`Strikes: ${this.strikes}`, "bold 18px Arial", "#f00");
+    this.direction = new createjs.Text(`Please press 'Enter' to Start\n'Space' to pause the game`, "18px Arial", "#2ecc71");
     this.width = stage.x;
     this.height = stage.y;
     this.loader = new createjs.LoadQueue(false);
@@ -39,10 +40,12 @@ export default class Game {
   }
 
   handleComplete () {
-    let background = new createjs.Bitmap(this.loader.getResult("background"));
-    this.stage.addChild(background);
+    this.backGround = new createjs.Bitmap(this.loader.getResult("background"));
+    this.gameOverImg = new createjs.Bitmap(this.loader.getResult("game_over"));
+
+    this.stage.addChild(this.backGround);
     this.sliceables.createSliceables(this.width);
-    this.createFields("scoreField", "strikesField");
+    this.createFields();
     this.stage.update();
     document.onkeydown = () => {
       this.handleKeys(event);
@@ -61,6 +64,17 @@ export default class Game {
     this.strikesField.maxWidth = 1000;
     this.strikesField.x = 600;
     this.strikesField.y = 20;
+
+    this.direction.textAlign = "right";
+    this.stage.addChild(this.direction);
+    this.direction.maxWidth = 1000;
+    this.direction.x = 420;
+    this.direction.y = 300;
+
+
+    this.gameOverImg.maxWidth = 1000;
+    this.gameOverImg.x = 180;
+    this.gameOverImg.y = 220;
 
 		this.stage.update();
   }
@@ -95,6 +109,7 @@ export default class Game {
       this.stage.mouseEnabled = (!this.pause);
       // createjs.Ticker.setPaused = true;
     } else if ( e.keyCode === 13 && !this.started){
+      this.stage.removeChild(this.direction)
       createjs.Ticker.addEventListener("tick", this.tick);
       this.handlePlay();
       setInterval(this.handlePlay, 1700);
@@ -107,22 +122,20 @@ export default class Game {
   updateStrikes() {
     this.strikes += this.sliceables.checkOutOfBounds();
     this.strikesField.text = `Strikes: ${this.strikes}`;
-    // this.checkGameOver();
+    this.checkGameOver();
   }
 
   updateScore() {
     this.score += this.sliceables.checkCollisions();
-    this.scoreField.text = `Strikes: ${this.score}`;
+    this.scoreField.text = `Score: ${this.score}`;
   }
 
   checkGameOver() {
     if (this.strikes >=3) {
       this.gameOver = true;
-      let gameOverImg = new createjs.Bitmap(this.loader.getResult("game_over"));
-      this.gameOverImg.maxWidth = 1000;
-      this.gameOverImg.x = 120;
-      this.gameOverImg.y = 20;
-      this.stage.addChild(gameOverImg);
+
+      this.stage.addChild(this.gameOverImg);
+      this.stage.addChild(this.direction);
       this.stage.update();
     }
   }
