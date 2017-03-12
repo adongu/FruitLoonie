@@ -23,11 +23,12 @@ export default class Game {
     createjs.MotionGuidePlugin.install();
     this.sliceables = new Sliceables(this.stage, this.difficulty, this.loader);
     this.tick = this.tick.bind(this);
-
     // this.createFields = this.createFields.bind(this);
     this.handleComplete = this.handleComplete.bind(this);
     // this.handleKeys = this.handleKeys.bind(this);
     this.handlePlay = this.handlePlay.bind(this);
+    this.updateStrikes = this.updateStrikes.bind(this);
+    this.updateScore = this.updateScore.bind(this);
     // this.restart = this.restart.bind(this);
   };
 
@@ -75,12 +76,11 @@ export default class Game {
     // let deltaS = event.delta / 1000;
   //   let self = this;
   //   // Object.keys(this.circles).forEach((id) =>{
-  //     // let pt = self.circles[id].globalToLocal(self.stage.mouseX, self.stage.mouseY);
   //
   //     // self.circles[id].alpha = 0;
     this.sliceables.moveSliceables();
-  //     // this.checkOutOfBounds(id)
-  //     // this.checkCollision(pt, id)
+    this.updateStrikes();
+    // this.checkCollision(pt, id)
   //   // })
     this.stage.update();
   }
@@ -99,6 +99,29 @@ export default class Game {
       this.started = true
     } else if ( e.keyCode === 13 && this.strikes >= 3) {
       this.restart();
+    }
+  }
+
+  updateStrikes() {
+    // this.strikes += this.sliceables.checkOutOfBounds();
+    this.strikesField.text = `Strikes: ${this.strikes}`;
+    this.checkGameOver();
+  }
+
+  updateScore() {
+    // this.strikes += this.sliceables.checkOutOfBounds();
+    this.scoreField.text = `Strikes: ${this.score}`;
+  }
+
+  checkGameOver() {
+    if (this.strikes >=3) {
+      let gameOverImg = new createjs.Bitmap(this.loader.getResult("game_over"));
+      this.gameOverImg.maxWidth = 1000;
+      this.gameOverImg.x = 120;
+      this.gameOverImg.y = 20;
+      this.stage.addChild(gameOverImg);
+      this.stage.update();
+      this.gameOver = true;
     }
   }
 

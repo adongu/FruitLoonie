@@ -49,13 +49,6 @@ export default class Sliceables {
     }
   }
   // array of staged circle ids
-  stagedCirclesIds() {
-    let circles = this.stage.children.filter((child) => {
-      // child is circle if it has type property
-      return child.type ? true : false;
-    });
-    return circles.map( circle => { return circle.cacheID - 1 })
-  }
 
   moveSliceables() {
     let self = this;
@@ -95,27 +88,35 @@ export default class Sliceables {
   }
 
   checkOutOfBounds(id) {
-    if (this.circles[id].x+30 > this.width+50 || this.circles[id].y > this.height + 50) {
-      this.strikes += 1;
-      this.strikesField.text = `Strikes: ${this.strikes}`;
-      if (this.strikes >=3) {
-        let gameOverImg = new createjs.Bitmap(this.loader.getResult("game_over"));
-        this.stage.addChild(gameOverImg);
+    let self = this;
+    let strikes = 0;
+
+    stagedCirclesIds.forEach( id => {
+
+      if (this.circles[id].outOfBounds === false && this.circles[id].x > this.width/2 && this.circles.y > this.height) {
+        this.circles[id].outOfBounds = true;
+        strikes += 1;
+        self.stage.removeChild(self.circles[id])
+        self.stage.removeChild(self.circles[id].model);
+        self.circles[id].outOfBounds = false;
         this.stage.update();
+        // this.circles[id].mouseEnabled = false;
       }
-      this.circles[id].mouseEnabled = false;
-      // if outOfBoundsTimes > 2, reset to 0, unstage child
-      this.stage.removeChild(this.circles[id].model);
-      this.stage.removeChild(this.circles[id]);
-      delete this.circles[id];
-      this.stage.update();
-    }
+    })
   }
 
-  checkCollision (pt, id) {
-    if (this.circles[id] && this.stage.mouseInBounds && this.circles[id].hitTest(pt.x, pt.y)) {
+  stagedCirclesIds() {
+    let circles = this.stage.children.filter((child) => {
+      // child is circle if it has type property
+      return child.type ? true : false;
+    });
+    return circles.map( circle => { return circle.cacheID - 1 })
+  }
+
+  checkCollision () {
+    let pt = this.circles[id].globalToLocal(this.stage.mouseX, this.stage.mouseY);
+    if (this.circles[id] && this.stage.mouseInBounds && this.circles[id].hitTest(pt.x, pt.y) && this.circles) {
       this.score += 1;
-      this.scoreField.text = `Score: ${this.score}`;
       // this.circles[id].alpha = 1;
       this.circles[id].mouseEnabled = false;
       this.stage.removeChild(this.circles[id].model);
@@ -125,6 +126,7 @@ export default class Sliceables {
       this.stage.update();
     }
   }
+
 
   playSound (type) {
     if ("splatter") {
