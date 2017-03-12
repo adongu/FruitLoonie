@@ -83,9 +83,8 @@ export default class Game {
   handlePlay () {
     if (!this.pause && !this.gameOver) {
       this.sliceables.stageSliceables();
-      console.log("hit");
+      setTimeout(this.handlePlay, 1700);
     }
-    // setInterval(this.handlePlay(), 4000);
   }
 
   tick(event) {
@@ -118,8 +117,8 @@ export default class Game {
       this.stage.removeChild(this.direction);
       createjs.Ticker.addEventListener("tick", this.tick);
       this.handlePlay();
-      // setInterval will stack
-      setTimeout(this.handlePlay, 1700);
+      // setInterval will stack, timeout won't run after some time
+      // setInterval(this.handlePlay, 1700);
       this.started = true;
     }
     // else if ( e.keyCode === 13 && this.strikes >= 3) {
