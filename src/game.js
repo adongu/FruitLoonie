@@ -80,6 +80,7 @@ export default class Game {
   //     // self.circles[id].alpha = 0;
     this.sliceables.moveSliceables();
     this.updateStrikes();
+    this.updateScore();
     // this.checkCollision(pt, id)
   //   // })
     this.stage.update();
@@ -92,6 +93,7 @@ export default class Game {
       createjs.Ticker.setPaused(!this.pause)
       this.pause = !this.pause;
       this.stage.mouseEnabled = (!this.pause);
+      // createjs.Ticker.setPaused = true;
     } else if ( e.keyCode === 13 && !this.started){
       createjs.Ticker.addEventListener("tick", this.tick);
       this.handlePlay();
@@ -109,29 +111,28 @@ export default class Game {
   }
 
   updateScore() {
-    // this.strikes += this.sliceables.checkCollisions();
+    this.score += this.sliceables.checkCollisions();
     this.scoreField.text = `Strikes: ${this.score}`;
   }
 
   checkGameOver() {
-    // if (this.strikes >=3) {
-    //   let gameOverImg = new createjs.Bitmap(this.loader.getResult("game_over"));
-    //   this.gameOverImg.maxWidth = 1000;
-    //   this.gameOverImg.x = 120;
-    //   this.gameOverImg.y = 20;
-    //   this.stage.addChild(gameOverImg);
-    //   this.stage.update();
-    //   this.gameOver = true;
-    // }
+    if (this.strikes >=3) {
+      this.gameOver = true;
+      let gameOverImg = new createjs.Bitmap(this.loader.getResult("game_over"));
+      this.gameOverImg.maxWidth = 1000;
+      this.gameOverImg.x = 120;
+      this.gameOverImg.y = 20;
+      this.stage.addChild(gameOverImg);
+      this.stage.update();
+    }
   }
 
   restart () {
     this.stage.removeAllChildren();
-    // this.started = false;
+    this.started = false;
     this.strikes = 0;
     this.score = 0;
     this.gameOver = false;
-    this.started = false;
     // this.stage.addChild(scoreBoard);
     this.handleComplete();
   }

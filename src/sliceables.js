@@ -22,7 +22,7 @@ export default class Sliceables {
     this.createSliceables = this.createSliceables.bind(this);
     this.moveSliceables = this.moveSliceables.bind(this);
     this.checkOutOfBounds = this.checkOutOfBounds.bind(this);
-    this.checkCollision = this.checkCollision.bind(this);
+    this.checkCollisions = this.checkCollisions.bind(this);
     this.playSound = this.playSound.bind(this);
     this.stagedCirclesIds = this.stagedCirclesIds.bind(this);
   }
@@ -80,8 +80,10 @@ export default class Sliceables {
   projectileMotionY(x) {
     if (x <= 320) {
       return -.26333333*Math.pow(x,2)/100000 - 2;
+      // - 3 + Math.random()*1;
     } else {
       return .2633333*Math.pow(x,2)/100000 + 2;
+      // + 3 + Math.random()*1;
     }
   }
 
@@ -116,23 +118,28 @@ export default class Sliceables {
     return circles.map( circle => { return circle.cacheID - 1 })
   }
 
-  checkCollision () {
-    let pt = this.circles[id].globalToLocal(this.stage.mouseX, this.stage.mouseY);
-    if (this.circles[id] && this.stage.mouseInBounds && this.circles[id].hitTest(pt.x, pt.y) && this.circles) {
-      this.score += 1;
-      // this.circles[id].alpha = 1;
-      this.circles[id].mouseEnabled = false;
-      this.stage.removeChild(this.circles[id].model);
-      this.stage.removeChild(this.circles[id]);
-      delete this.circles[id];
-      this.splicesables.playSound("splatter")
-      this.stage.update();
-    }
+  checkCollisions () {
+    let pt;
+    let self = this;
+    let score = 0;
+    this.stagedCirclesIds().forEach( id => {
+      pt = this.circles[id].globalToLocal(this.stage.mouseX, this.stage.mouseY);
+// this.circles[id] && this.stage.mouseInBounds &&
+      if (this.circles[id].hitTest(pt.x, pt.y) && this.circles) {
+        // playSound("splatter")
+        score += 1;
+        this.circles[id].mouseEnabled = false;
+        this.stage.removeChild(this.circles[id].model);
+        this.stage.removeChild(this.circles[id]);
+        this.stage.update();
+      }
+    });
+    return score
   }
 
   playSound (type) {
     if ("splatter") {
-      createjs.Sound.play("splatter_sound", {volume: 0.025});
+      createjs.Sound.play("splatter_sound", {volume: 0.020});
     } else if ("throw") {
       createjs.Sound.play("throw_sound", { volume: 0.025 });
     }
