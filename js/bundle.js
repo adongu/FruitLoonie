@@ -110,12 +110,15 @@ var Game = function () {
     this.loader = new createjs.LoadQueue(false);
     this.loader.installPlugin(createjs.Sound);
     createjs.MotionGuidePlugin.install();
-    this.sliceables = new _sliceables2.default(this.stage, this.difficulty, this.loader, this.scoreField, this.strikesField);
-    this.createFields = this.createFields.bind(this);
+    this.sliceables = new _sliceables2.default(this.stage, this.difficulty, this.loader);
+    this.tick = this.tick.bind(this);
+    // this.createFields = this.createFields.bind(this);
     this.handleComplete = this.handleComplete.bind(this);
-    this.handleKeys = this.handleKeys.bind(this);
+    // this.handleKeys = this.handleKeys.bind(this);
     this.handlePlay = this.handlePlay.bind(this);
-    this.restart = this.restart.bind(this);
+    this.updateStrikes = this.updateStrikes.bind(this);
+    this.updateScore = this.updateScore.bind(this);
+    // this.restart = this.restart.bind(this);
   }
 
   _createClass(Game, [{
@@ -132,11 +135,12 @@ var Game = function () {
 
       var background = new createjs.Bitmap(this.loader.getResult("background"));
       this.stage.addChild(background);
+      this.sliceables.createSliceables(this.width);
+      this.createFields("scoreField", "strikesField");
       this.stage.update();
       document.onkeydown = function () {
         _this.handleKeys(event);
       };
-      this.createFields("scoreField", "strikesField");
     }
   }, {
     key: "createFields",
@@ -158,28 +162,26 @@ var Game = function () {
   }, {
     key: "handlePlay",
     value: function handlePlay() {
-      var _this2 = this;
-
       if (!this.pause && !this.gameOver) {
         this.sliceables.stageSliceables();
-        this.sliceables.strikes;
-        setInterval(function () {
-          _this2.handlePlay();
-        }, 2000);
       }
-      // else if (!this.gameOver) {
-      //   this.checkGameOver();
-      //   // this.handlePlay();
-      // }
+      // setInterval(this.handlePlay(), 4000);
     }
-
-    // checkGameOver() {
-    //   if (this.strikesField.text.split(": ").slice(1)*1 >=3 ) {
-    //     this.gameOver = true;
-    //     this.restart();
-    //   }
-    // }
-
+  }, {
+    key: "tick",
+    value: function tick(event) {
+      // let deltaS = event.delta / 1000;
+      //   let self = this;
+      //   // Object.keys(this.circles).forEach((id) =>{
+      //
+      //     // self.circles[id].alpha = 0;
+      this.sliceables.moveSliceables();
+      this.updateStrikes();
+      this.updateScore();
+      // this.checkCollision(pt, id)
+      //   // })
+      this.stage.update();
+    }
   }, {
     key: "handleKeys",
     value: function handleKeys(e) {
@@ -189,22 +191,50 @@ var Game = function () {
         createjs.Ticker.setPaused(!this.pause);
         this.pause = !this.pause;
         this.stage.mouseEnabled = !this.pause;
+        // createjs.Ticker.setPaused = true;
       } else if (e.keyCode === 13 && !this.started) {
+        createjs.Ticker.addEventListener("tick", this.tick);
         this.handlePlay();
+        setInterval(this.handlePlay, 1700);
         this.started = true;
       } else if (e.keyCode === 13 && this.strikes >= 3) {
         this.restart();
       }
     }
   }, {
+    key: "updateStrikes",
+    value: function updateStrikes() {
+      this.strikes += this.sliceables.checkOutOfBounds();
+      this.strikesField.text = "Strikes: " + this.strikes;
+      // this.checkGameOver();
+    }
+  }, {
+    key: "updateScore",
+    value: function updateScore() {
+      this.score += this.sliceables.checkCollisions();
+      this.scoreField.text = "Strikes: " + this.score;
+    }
+  }, {
+    key: "checkGameOver",
+    value: function checkGameOver() {
+      if (this.strikes >= 3) {
+        this.gameOver = true;
+        var gameOverImg = new createjs.Bitmap(this.loader.getResult("game_over"));
+        this.gameOverImg.maxWidth = 1000;
+        this.gameOverImg.x = 120;
+        this.gameOverImg.y = 20;
+        this.stage.addChild(gameOverImg);
+        this.stage.update();
+      }
+    }
+  }, {
     key: "restart",
     value: function restart() {
       this.stage.removeAllChildren();
-      // this.started = false;
-      // this.strikes = 0;
-      // this.score = 0;
-      // this.gameOver = false;
-      // this.started = false;
+      this.started = false;
+      this.strikes = 0;
+      this.score = 0;
+      this.gameOver = false;
       // this.stage.addChild(scoreBoard);
       this.handleComplete();
     }
@@ -215,8 +245,6 @@ var Game = function () {
 
 exports.default = Game;
 ;
-
-// does logic of checking being sliced, point system and points, as well as difficulty
 
 /***/ }),
 /* 1 */
@@ -240,46 +268,56 @@ var Sliceable = function () {
     this.circles = {};
     this.radius = 45;
     this.loader = loader;
-    this.createSliceables = this.createSliceables.bind(this);
+    this.generateSliceables = this.generateSliceables.bind(this);
     //"bomb"
     this.types = ["peach", "apple", "strawberry", "watermelon"];
     this.determineSliceable = this.determineSliceable.bind(this);
+    this.initializeProperties = this.initializeProperties.bind(this);
   }
 
   _createClass(Sliceable, [{
-    key: "mapSliceableImg",
-    value: function mapSliceableImg(width, height, number) {
-      for (var i = 0; i < number; i++) {
-        circles.push(new createjs.Shape());
-        circles[i].graphics.beginFill("black").drawCircle(0, 0, 50);
-        circles[i].alpha = 0;
-        circles[i].x = Math.random() * width;
-        circles[i].y = 550;
-      }
-    }
-  }, {
-    key: "createSliceables",
-    value: function createSliceables(width, difficulty) {
+    key: "generateSliceables",
+    value: function generateSliceables(width, difficulty) {
       var radius = this.radius;
       this.circles = {};
       for (var i = 0; i < difficulty; i++) {
         this.circles[i] = new createjs.Shape();
 
-        this.circles[i].graphics.beginFill("red").drawCircle(radius, radius, radius);
+        this.circles[i].graphics.beginFill("black").drawCircle(radius, radius, radius);
         this.circles[i].alpha = 0;
         this.circles[i].type = this.determineSliceable();
-        this.circles[i].shape = new createjs.Bitmap(this.loader.getResult("" + this.circles[i].type));
+        // for checking times out of border length, 1 for creating, 2 to unstage
+        this.circles[i].model = new createjs.Bitmap(this.loader.getResult("" + this.circles[i].type));
 
-        this.circles[i].x = Math.random() * width;
-        this.circles[i].y = 400;
+        // this.initializeProperties(i);
 
         this.circles[i].snapToPixel = true;
-        // this.circles[i].shape.snapToPixel = true;
+        this.circles[i].model.snapToPixel = true;
         this.circles[i].cache(0, 0, radius * 2, radius * 2);
       }
       createjs.Ticker.setFPS(60);
-      // createjs.Ticker.addEventListener("tick", this.tick);
       return this.circles;
+    }
+  }, {
+    key: "initializeProperties",
+    value: function initializeProperties(i, width) {
+      var x = 0 + Math.random() * 100;
+      var y = 400;
+      var angle = 45 + Math.random() * 10;
+      var end = 580 + Math.random() + 50;
+      this.circles[i].outOfBounds = false;
+
+      this.circles[i].x = x;
+      this.circles[i].y = y;
+      this.circles[i].begin = x;
+      this.circles[i].end = end;
+      this.circles[i].angle = angle;
+
+      this.circles[i].model.x = x;
+      this.circles[i].model.y = y + 5;
+      this.circles[i].model.begin = x;
+      this.circles[i].model.end = end;
+      this.circles[i].model.angle = angle;
     }
   }, {
     key: "determineSliceable",
@@ -316,7 +354,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Sliceables = function () {
-  function Sliceables(stage, difficulty, loader, scoreField, strikesField, gameOver) {
+  function Sliceables(stage, difficulty, loader) {
     _classCallCheck(this, Sliceables);
 
     this.circles = {};
@@ -325,143 +363,156 @@ var Sliceables = function () {
     this.height = this.stage.canvas.height;
     this.radius = 50;
     this.beginCounter = 0;
-    this.scoreField = scoreField;
-    this.strikesField = strikesField;
+    this.velocity = 1.5;
+    this.minimumSliceables = 4;
+    this.difficulty = difficulty;
+    this.gravity = 4;
     this.score = 0;
     this.strikes = 0;
     this.loader = loader;
     // amount of objects per cycle;
-    this.frequency = 10;
-    this.difficulty = difficulty;
-    this.stageSliceables = this.stageSliceables.bind(this);
-    // this.bezierEasing = this.bezierEasing.bind(this);
-    this.tick = this.tick.bind(this);
-    this.createSliceables = this.createSliceables.bind(this);
-    this.handleSliceables = this.handleSliceables.bind(this);
-    this.checkOutOfBounds = this.checkOutOfBounds.bind(this);
-    this.checkCollision = this.checkCollision.bind(this);
-    this.reset = this.reset.bind(this);
     this.sliceable = new _sliceable2.default(loader);
+    this.stageSliceables = this.stageSliceables.bind(this);
+    this.createSliceables = this.createSliceables.bind(this);
+    this.moveSliceables = this.moveSliceables.bind(this);
+    this.checkOutOfBounds = this.checkOutOfBounds.bind(this);
+    this.checkCollisions = this.checkCollisions.bind(this);
     this.playSound = this.playSound.bind(this);
+    this.stagedCirclesIds = this.stagedCirclesIds.bind(this);
   }
 
   _createClass(Sliceables, [{
     key: "stageSliceables",
     value: function stageSliceables() {
-      var self = this;
-
-      if (Object.keys(this.circles).length <= this.frequency) {
-        this.circles = this.sliceable.createSliceables(this.width, this.difficulty);
+      // number of circles to add
+      var numCircles = 0;
+      var stagedCirclesIds = this.stagedCirclesIds();
+      var id = 0;
+      // check for unstaged circles, make sure doesn't stage more than created
+      if (stagedCirclesIds && stagedCirclesIds.length + this.minimumSliceables <= this.difficulty) {
+        while (numCircles < this.minimumSliceables) {
+          if (stagedCirclesIds.indexOf(id) === -1) {
+            // this.circles[id].outOfBounds = false;
+            this.sliceable.initializeProperties(id, this.width);
+            this.stage.addChild(this.circles[id]);
+            this.stage.addChild(this.circles[id].model);
+            createjs.Sound.play("throw_sound", { volume: 0.025 });
+            stagedCirclesIds.push(id);
+            numCircles += 1;
+          }
+          this.stage.update();
+          id += 1;
+        }
+        this.stage.update();
       }
-      createjs.Ticker.addEventListener("tick", this.tick);
-      // add amount by frequency, start from previous end frequency
-      Object.keys(this.circles).slice(this.beginCounter, this.frequency).forEach(function (id, index) {
+    }
+    // array of staged circle ids
 
-        // set time interval for each Sliceables
-        self.stage.addChild(self.circles[id]);
-        self.stage.addChild(self.circles[id].shape);
+  }, {
+    key: "moveSliceables",
+    value: function moveSliceables() {
+      var self = this;
+      var stagedCirclesIds = this.stagedCirclesIds();
+      if (stagedCirclesIds.length > 0) {
+        stagedCirclesIds.forEach(function (id) {
+          var deltaX = self.projectileMotionX(self.circles[id].x);
+          var deltaY = self.projectileMotionY(self.circles[id].x);
 
-        var time = index * 500;
-        setTimeout(function () {
-          self.handleSliceables(self.circles[id], time);
+          self.circles[id].x += deltaX;
+          self.circles[id].model.x += deltaX;
+          self.circles[id].y += deltaY;
+          self.circles[id].model.y += deltaY;
+
+          // self.handleSliceables(self.circles[id], time)
           self.stage.update();
-        }, 1000);
-        // }
-      });
-      this.beginCounter += this.frequency;
+          // }
+        });
+      }
+      this.stage.update();
     }
   }, {
-    key: "handleSliceables",
-    value: function handleSliceables(circle, time) {
-      if (circle) {
-        var randomPow = Math.round(Math.random() * 3);
-        createjs.Tween.get(circle).to({ guide: { path: [120, 480, 220, 160, 340, 160, 500, 320, 580, 550] } }, 5000, createjs.Ease.getPowOut(randomPow));
-
-        createjs.Tween.get(circle.shape).to({ guide: { path: [120, 480, 220, 160, 340, 160, 500, 320, 580, 550] } }, 5000, createjs.Ease.getPowOut(randomPow));
-
-        this.stage.update();
-        createjs.Sound.play("throw_sound", { volume: 0.025 });
+    key: "projectileMotionX",
+    value: function projectileMotionX(x) {
+      return 2 * this.velocity;
+    }
+  }, {
+    key: "projectileMotionY",
+    value: function projectileMotionY(x) {
+      if (x <= 320) {
+        return -.26333333 * Math.pow(x, 2) / 100000 - 2;
+        // - 3 + Math.random()*1;
+      } else {
+        return .2633333 * Math.pow(x, 2) / 100000 + 2;
+        // + 3 + Math.random()*1;
       }
     }
   }, {
     key: "createSliceables",
-    value: function createSliceables(width, difficulty) {
-      this.circles = {};
-      var radius = this.radius;
-
-      for (var i = 0; i < difficulty; i++) {
-        this.circles[i] = new createjs.Shape();
-        this.circles[i].graphics.beginFill("red").drawCircle(0, 0, radius);
-        this.circles[i].x = Math.random() * width;
-        this.circles[i].y = 480;
-
-        this.circles[i].snapToPixel = true;
-        this.circles[i].cache(-radius, -radius, radius * 2, radius * 2);
-      }
-      createjs.Ticker.setFPS(60);
-      createjs.Ticker.addEventListener("tick", this.tick);
-    }
-  }, {
-    key: "tick",
-    value: function tick(event) {
-      var _this = this;
-
-      var self = this;
-      Object.keys(this.circles).forEach(function (id) {
-        var pt = self.circles[id].globalToLocal(self.stage.mouseX, self.stage.mouseY);
-
-        // self.circles[id].alpha = 0;
-
-        _this.checkOutOfBounds(id);
-        _this.checkCollision(pt, id);
-      });
-      self.stage.update();
+    value: function createSliceables(width) {
+      this.circles = this.sliceable.generateSliceables(width, this.difficulty);
     }
   }, {
     key: "checkOutOfBounds",
     value: function checkOutOfBounds(id) {
-      if (this.circles[id].x + 30 > this.width + 50 || this.circles[id].y > this.height + 50) {
-        this.strikes += 1;
-        this.strikesField.text = "Strikes: " + this.strikes;
-        if (this.strikes >= 3) {
-          var gameOverImg = new createjs.Bitmap(this.loader.getResult("game_over"));
-          this.stage.addChild(gameOverImg);
-          this.stage.update();
+      var self = this;
+      var strikes = 0;
+      this.stagedCirclesIds().forEach(function (id) {
+        // if greater than midpoint of canvas check if greater than width and height of canvas, doesn't check already out of bounds shapes
+        if (self.circles[id].outOfBounds === false && self.circles[id].x > self.width / 2 && (self.circles[id].y > self.height || self.circles[id].x > self.width)) {
+          self.circles[id].outOfBounds = true;
+          strikes += 1;
+          self.stage.removeChild(self.circles[id]);
+          self.stage.removeChild(self.circles[id].model);
+          console.log("outofBounds ", id);
+          self.stage.update();
+          // this.circles[id].mouseEnabled = false;
         }
-        this.circles[id].mouseEnabled = false;
-        this.stage.removeChild(this.circles[id].shape);
-        this.stage.removeChild(this.circles[id]);
-        delete this.circles[id];
-        this.stage.update();
-      }
+        self.stage.update();
+      });
+      return strikes;
     }
   }, {
-    key: "checkCollision",
-    value: function checkCollision(pt, id) {
-      if (this.circles[id] && this.stage.mouseInBounds && this.circles[id].hitTest(pt.x, pt.y)) {
-        this.score += 1;
-        this.scoreField.text = "Score: " + this.score;
-        // this.circles[id].alpha = 1;
-        this.circles[id].mouseEnabled = false;
-        this.stage.removeChild(this.circles[id].shape);
-        this.stage.removeChild(this.circles[id]);
-        delete this.circles[id];
-        this.playSound("splatter");
-        this.stage.update();
-      }
+    key: "stagedCirclesIds",
+    value: function stagedCirclesIds() {
+      var circles = this.stage.children.filter(function (child) {
+        // child is circle if it has type property
+        return child.type ? true : false;
+      });
+      return circles.map(function (circle) {
+        return circle.cacheID - 1;
+      });
+    }
+  }, {
+    key: "checkCollisions",
+    value: function checkCollisions() {
+      var _this = this;
+
+      var pt = void 0;
+      var self = this;
+      var score = 0;
+      this.stagedCirclesIds().forEach(function (id) {
+        pt = _this.circles[id].globalToLocal(_this.stage.mouseX, _this.stage.mouseY);
+        // this.circles[id] && this.stage.mouseInBounds &&
+        if (_this.circles[id].hitTest(pt.x, pt.y) && _this.circles) {
+          _this.playSound("splatter");
+          score += 1;
+          _this.circles[id].mouseEnabled = false;
+          _this.stage.removeChild(_this.circles[id].model);
+          _this.stage.removeChild(_this.circles[id]);
+          _this.stage.update();
+        }
+      });
+      return score;
     }
   }, {
     key: "playSound",
     value: function playSound(type) {
       if ("splatter") {
-        createjs.Sound.play("splatter_sound", { volume: 0.025 });
+        createjs.Sound.play("splatter_sound", { volume: 0.020 });
       } else if ("throw") {
         createjs.Sound.play("throw_sound", { volume: 0.025 });
       }
     }
-  }, {
-    key: "reset",
-    value: function reset() {}
   }]);
 
   return Sliceables;
