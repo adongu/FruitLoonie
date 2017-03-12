@@ -105,6 +105,7 @@ var Game = function () {
     this.strikes = 0;
     this.scoreField = new createjs.Text("Score: " + this.score, "bold 18px Arial", "#f70");
     this.strikesField = new createjs.Text("Strikes: " + this.strikes, "bold 18px Arial", "#f00");
+    this.direction = new createjs.Text("Please press 'Enter' to Start\n'Space' to pause the game", "18px Arial", "#2ecc71");
     this.width = stage.x;
     this.height = stage.y;
     this.loader = new createjs.LoadQueue(false);
@@ -124,19 +125,22 @@ var Game = function () {
   _createClass(Game, [{
     key: "start",
     value: function start() {
-      this.loader.addEventListener("complete", this.handleComplete);
       this.loader.loadManifest(this.manifest, true, "./assets/game/");
       this.loader.loadManifest(this.sliceableImgs, true, "./assets/sliceables/");
+      this.loader.addEventListener("complete", this.handleComplete);
     }
   }, {
     key: "handleComplete",
     value: function handleComplete() {
       var _this = this;
 
-      var background = new createjs.Bitmap(this.loader.getResult("background"));
-      this.stage.addChild(background);
-      this.sliceables.createSliceables(this.width);
-      this.createFields("scoreField", "strikesField");
+      this.backGround = new createjs.Bitmap(this.loader.getResult("background"));
+      this.gameOverImg = new createjs.Bitmap(this.loader.getResult("game_over"));
+      this.stage.addChild(this.backGround);
+      this.createFields();
+      if (!this.sliceables.anySliceables()) {
+        this.sliceables.createSliceables(this.width);
+      }
       this.stage.update();
       document.onkeydown = function () {
         _this.handleKeys(event);
@@ -157,6 +161,16 @@ var Game = function () {
       this.strikesField.x = 600;
       this.strikesField.y = 20;
 
+      this.direction.textAlign = "right";
+      this.stage.addChild(this.direction);
+      this.direction.maxWidth = 1000;
+      this.direction.x = 420;
+      this.direction.y = 300;
+
+      this.gameOverImg.maxWidth = 1000;
+      this.gameOverImg.x = 180;
+      this.gameOverImg.y = 220;
+
       this.stage.update();
     }
   }, {
@@ -164,6 +178,7 @@ var Game = function () {
     value: function handlePlay() {
       if (!this.pause && !this.gameOver) {
         this.sliceables.stageSliceables();
+        console.log("hit");
       }
       // setInterval(this.handlePlay(), 4000);
     }
@@ -192,38 +207,45 @@ var Game = function () {
         this.pause = !this.pause;
         this.stage.mouseEnabled = !this.pause;
         // createjs.Ticker.setPaused = true;
-      } else if (e.keyCode === 13 && !this.started) {
+      } else if (e.keyCode === 13 && (!this.started || this.gameOver)) {
+        this.stage.removeChild(this.direction);
+        if (this.strikes >= 3) {
+          this.restart();
+        }
+        this.stage.removeChild(this.direction);
         createjs.Ticker.addEventListener("tick", this.tick);
         this.handlePlay();
-        setInterval(this.handlePlay, 1700);
+        // setInterval will stack
+        setTimeout(this.handlePlay, 1700);
         this.started = true;
-      } else if (e.keyCode === 13 && this.strikes >= 3) {
-        this.restart();
       }
+      // else if ( e.keyCode === 13 && this.strikes >= 3) {
+      //   createjs.Ticker.addEventListener("tick", this.tick);
+      //   this.handlePlay();
+      //   this.stage.removeChild(this.direction)
+      // }
     }
   }, {
     key: "updateStrikes",
     value: function updateStrikes() {
       this.strikes += this.sliceables.checkOutOfBounds();
       this.strikesField.text = "Strikes: " + this.strikes;
-      // this.checkGameOver();
+      this.checkGameOver();
     }
   }, {
     key: "updateScore",
     value: function updateScore() {
       this.score += this.sliceables.checkCollisions();
-      this.scoreField.text = "Strikes: " + this.score;
+      this.scoreField.text = "Score: " + this.score;
     }
   }, {
     key: "checkGameOver",
     value: function checkGameOver() {
       if (this.strikes >= 3) {
         this.gameOver = true;
-        var gameOverImg = new createjs.Bitmap(this.loader.getResult("game_over"));
-        this.gameOverImg.maxWidth = 1000;
-        this.gameOverImg.x = 120;
-        this.gameOverImg.y = 20;
-        this.stage.addChild(gameOverImg);
+
+        this.stage.addChild(this.gameOverImg);
+        this.stage.addChild(this.direction);
         this.stage.update();
       }
     }
@@ -231,6 +253,7 @@ var Game = function () {
     key: "restart",
     value: function restart() {
       this.stage.removeAllChildren();
+      createjs.Ticker.removeEventListener("tick", this.tick);
       this.started = false;
       this.strikes = 0;
       this.score = 0;
@@ -379,6 +402,7 @@ var Sliceables = function () {
     this.checkCollisions = this.checkCollisions.bind(this);
     this.playSound = this.playSound.bind(this);
     this.stagedCirclesIds = this.stagedCirclesIds.bind(this);
+    this.stagedCirclesIds = this.stagedCirclesIds.bind(this);
   }
 
   _createClass(Sliceables, [{
@@ -396,6 +420,8 @@ var Sliceables = function () {
             this.sliceable.initializeProperties(id, this.width);
             this.stage.addChild(this.circles[id]);
             this.stage.addChild(this.circles[id].model);
+            // bring to front
+            // stage.setChildIndex( displayObject, stage.getNumChildren()-1);
             createjs.Sound.play("throw_sound", { volume: 0.025 });
             stagedCirclesIds.push(id);
             numCircles += 1;
@@ -503,6 +529,11 @@ var Sliceables = function () {
         }
       });
       return score;
+    }
+  }, {
+    key: "anySliceables",
+    value: function anySliceables() {
+      return Object.keys(this.circles).length > 0;
     }
   }, {
     key: "playSound",

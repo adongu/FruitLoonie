@@ -11,7 +11,7 @@ export default class Game {
     this.pause = false;
     this.started = false;
     this.gameOver = false;
-    this.difficulty = 40;
+    this.difficulty = 20;
     this.score = 0;
     this.strikes = 0;
     this.scoreField = new createjs.Text(`Score: ${this.score}`, "bold 18px Arial", "#f70");
