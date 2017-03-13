@@ -14,7 +14,6 @@ js/bundle.js.map
 # Ignore node modules DS-Store and npm debug logs
 node_modules/
 
-.byebug_history
 .DS_Store
 npm-debug.log
 
