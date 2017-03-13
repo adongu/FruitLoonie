@@ -104,7 +104,6 @@ export default class Sliceables {
         strikes += 1;
         self.stage.removeChild(self.circles[id])
         self.stage.removeChild(self.circles[id].model);
-        console.log("outofBounds ", id);
         self.stage.update();
         // this.circles[id].mouseEnabled = false;
       }
