@@ -1,5 +1,9 @@
 import Game from './game';
+let mute;
+let muteBtn;
 document.addEventListener('DOMContentLoaded', () => {
+  mute = false;
+  muteBtn = document.getElementById("mute-btn");
   let manifest = [
     { src: "bomb-explode.ogg", id: "boom_sound" },
     { src: "splatter.ogg", id: "splatter_sound" },
@@ -36,29 +40,32 @@ document.addEventListener('DOMContentLoaded', () => {
     { src: "watermelon.png", id: "watermelon" },
     { src: "bomb.png", id: "bomb" },
   ]
-  let mute = false;
-  let muteBtn = document.getElementById("mute-btn");
+
   muteBtn.addEventListener('click', toggleMute);
   muteBtn.addEventListener('keydown', toggleMute);
 
-
-
-  const toggleMute = (e) => {
-    e.preventDefault();
-    if (e.keyCode >= 0) {
-      return;
-    }
-    if (mute) {
-      mute = false;
-      createjs.Sound.muted = false;
-      muteBtn.className = "";
-    } else {
-      mute = true;
-      createjs.Sound.muted = true;
-      muteBtn.className = "unmute";
-    }
-  }
+  // window.addEventListener("mousemove", PointerMove);
   const stage = new createjs.Stage("boardCanvas");
   let game = new Game(stage, manifest, sliceables);
   game.start();
 })
+
+const toggleMute = (e) => {
+  e.preventDefault();
+  if (e.keyCode >= 0) {
+    return;
+  }
+  if (mute) {
+    mute = false;
+    createjs.Sound.muted = false;
+    muteBtn.className = "";
+    muteBtn.textContent = "Mute"
+    // document.getElementById("mute-btn").text="Mute";
+  } else {
+    mute = true;
+    createjs.Sound.muted = true;
+    muteBtn.className = "unmute";
+    muteBtn.textContent = "UnMute"
+    // document.getElementById("mute-btn").text="Unmute";
+  }
+}

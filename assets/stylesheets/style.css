@@ -54,13 +54,15 @@ canvas {
   /*z-index: 1;*/
 }
 
-#unmute:hover {
+.unmute:hover {
   cursor: pointer;
 }
-#unmute {
+
+#mute-btn.unmute {
+  color: red;
   font-family: Metal Mania;
   font: 18px;
-  color: white;
+  /*color: white;*/
   position: absolute;
-  text-decoration: line-through;
+  /*text-decoration: line-through;*/
 }
