@@ -1,9 +1,9 @@
 import Game from './game';
+import MouseAnimation from './mouseAnimation'
+
 let mute;
 let muteBtn;
 document.addEventListener('DOMContentLoaded', () => {
-  mute = false;
-  muteBtn = document.getElementById("mute-btn");
   let manifest = [
     { src: "bomb-explode.ogg", id: "boom_sound" },
     { src: "splatter.ogg", id: "splatter_sound" },
@@ -41,11 +41,17 @@ document.addEventListener('DOMContentLoaded', () => {
     { src: "bomb.png", id: "bomb" },
   ]
 
+  mute = false;
+  muteBtn = document.getElementById("mute-btn");
+
+
   muteBtn.addEventListener('click', toggleMute);
   muteBtn.addEventListener('keydown', toggleMute);
-
   // window.addEventListener("mousemove", PointerMove);
   const stage = new createjs.Stage("boardCanvas");
+  //
+  let mouseAnimation = new MouseAnimation(stage);
+  mouseAnimation.update();
   let game = new Game(stage, manifest, sliceables);
   game.start();
 })
