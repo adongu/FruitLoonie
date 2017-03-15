@@ -141,7 +141,7 @@ var Game = function () {
     this.pause = false;
     this.started = false;
     this.gameOver = false;
-    this.difficulty = 20;
+    this.difficulty = 40;
     this.score = 0;
     this.strikes = 0;
     this.scoreField = new createjs.Text("Score: " + this.score, "bold 18px Arial", "#f70");
@@ -225,17 +225,13 @@ var Game = function () {
   }, {
     key: "tick",
     value: function tick(event) {
-      // let deltaS = event.delta / 1000;
-      //   let self = this;
-      //   // Object.keys(this.circles).forEach((id) =>{
-      //
-      //     // self.circles[id].alpha = 0;
-      this.sliceables.moveSliceables();
-      this.updateStrikes();
-      this.updateScore();
-      // this.checkCollision(pt, id)
-      //   // })
-      this.stage.update();
+      // tick only runs when not paused;
+      if (!this.pause) {
+        this.sliceables.moveSliceables();
+        this.updateStrikes();
+        this.updateScore();
+        this.stage.update();
+      }
     }
   }, {
     key: "handleKeys",
@@ -243,9 +239,10 @@ var Game = function () {
       this.strikes = this.strikesField.text.split(": ").slice(1) * 1;
       // game pause
       if (e.keyCode === 32 && this.started) {
-        createjs.Ticker.setPaused(!this.pause);
         this.pause = !this.pause;
-        this.stage.mouseEnabled = !this.pause;
+        if (this.pause) {
+          this.stage.mouseEnabled = this.pause;
+        }
         // createjs.Ticker.setPaused = true;
       } else if (e.keyCode === 13 && (!this.started || this.gameOver)) {
         this.stage.removeChild(this.direction);
@@ -451,10 +448,11 @@ var Sliceables = function () {
       // number of circles to add
       var numCircles = 0;
       var stagedCirclesIds = this.stagedCirclesIds();
-      var id = 0;
+      var id = void 0;
       // check for unstaged circles, make sure doesn't stage more than created
       if (stagedCirclesIds && stagedCirclesIds.length + this.minimumSliceables <= this.difficulty) {
         while (numCircles < this.minimumSliceables) {
+          id = Math.floor(Math.random() * (this.difficulty - 1));
           if (stagedCirclesIds.indexOf(id) === -1) {
             // this.circles[id].outOfBounds = false;
             this.sliceable.initializeProperties(id, this.width);
@@ -481,8 +479,8 @@ var Sliceables = function () {
       var stagedCirclesIds = this.stagedCirclesIds();
       if (stagedCirclesIds.length > 0) {
         stagedCirclesIds.forEach(function (id) {
-          var deltaX = self.projectileMotionX(self.circles[id].x);
-          var deltaY = self.projectileMotionY(self.circles[id].x);
+          var deltaX = self.projectileMotionX(self.circles[id].x, id);
+          var deltaY = self.projectileMotionY(self.circles[id].x, id);
 
           self.circles[id].x += deltaX;
           self.circles[id].model.x += deltaX;
@@ -491,24 +489,23 @@ var Sliceables = function () {
 
           // self.handleSliceables(self.circles[id], time)
           self.stage.update();
-          // }
         });
       }
       this.stage.update();
     }
   }, {
     key: "projectileMotionX",
-    value: function projectileMotionX(x) {
-      return 2 * this.velocity;
+    value: function projectileMotionX(x, id) {
+      return 2 * this.velocity + id % 3;
     }
   }, {
     key: "projectileMotionY",
-    value: function projectileMotionY(x) {
+    value: function projectileMotionY(x, id) {
       if (x <= 320) {
-        return -.26333333 * Math.pow(x, 2) / 100000 - 2;
+        return -.26333333 * Math.pow(x, 2) / 100000 - 2 - id % 2;
         // - 3 + Math.random()*1;
       } else {
-        return .2633333 * Math.pow(x, 2) / 100000 + 2;
+        return .2633333 * Math.pow(x, 2) / 100000 + 2 + id % 2;
         // + 3 + Math.random()*1;
       }
     }

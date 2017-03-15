@@ -12,7 +12,7 @@
 FruitLoonie is an interactive slashing game inspired by Fruit Ninja with one simple objective, slashing as many fruits as possible without having slip pass or slashing a bomb. This game utilize ES6, babel.js, Create.Js, and canvas.
 
 ### Projectiles
-Shapes follow parabolic projectile motion and is randomized by starting location.
+Shapes follow parabolic projectile motion and is randomized by starting location. Randomness is added with modulus of shape id
 
 ``` JavaScript
 moveSliceables() {
@@ -20,8 +20,8 @@ moveSliceables() {
   let stagedCirclesIds = this.stagedCirclesIds();
   if (stagedCirclesIds.length > 0) {
     stagedCirclesIds.forEach( id => {
-      let deltaX = self.projectileMotionX(self.circles[id].x);
-      let deltaY = self.projectileMotionY(self.circles[id].x);
+      let deltaX = self.projectileMotionX(self.circles[id].x, id);
+      let deltaY = self.projectileMotionY(self.circles[id].x, id);
 
       self.circles[id].x += deltaX;
       self.circles[id].model.x += deltaX;
@@ -35,16 +35,16 @@ moveSliceables() {
   this.stage.update();
 }
 
-projectileMotionX(x) {
-  return 2*this.velocity;
+projectileMotionX(x, id) {
+  return 2 * this.velocity + (id % 3);
 }
 
-projectileMotionY(x) {
+projectileMotionY(x, id) {
   if (x <= 320) {
-    return -.26333333*Math.pow(x,2)/100000 - 2;
+    return -.26333333*Math.pow(x,2)/100000 - 2 - id % 2;
     // - 3 + Math.random()*1;
   } else {
-    return .2633333*Math.pow(x,2)/100000 + 2;
+    return .2633333*Math.pow(x,2)/100000 + 2 + id % 2;
     // + 3 + Math.random()*1;
   }
 }
