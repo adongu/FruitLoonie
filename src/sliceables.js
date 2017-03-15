@@ -70,7 +70,6 @@ export default class Sliceables {
 
         // self.handleSliceables(self.circles[id], time)
         self.stage.update();
-        // }
       });
     }
     this.stage.update();
