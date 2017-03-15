@@ -1,4 +1,4 @@
-export default class MouseAnimation {
+export default class Animations {
   // selects stage through id
 
   constructor(stage) {

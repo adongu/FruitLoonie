@@ -1,21 +1,6 @@
-#   git config --global core.excludesfile '~/.gitignore_global'
-
-
-# Ignore all logfiles and tempfiles.
-/log/*
-/tmp/*
-!/log/.keep
-!/tmp/.keep
-js/bundle.js.map
-
-# Ignore Byebug command history file.
-.byebug_history
-
 # Ignore node modules DS-Store and npm debug logs
-node_modules/
 
+js/bundle.js.map
+node_modules/
 .DS_Store
 npm-debug.log
-
-# Ignore application configuration
-/config/application.yml

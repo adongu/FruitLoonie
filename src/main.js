@@ -1,5 +1,5 @@
 import Game from './game';
-import MouseAnimation from './mouseAnimation'
+import Animation from './Animation'
 
 let mute;
 let muteBtn;
@@ -50,8 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // window.addEventListener("mousemove", PointerMove);
   const stage = new createjs.Stage("boardCanvas");
   //
-  let mouseAnimation = new MouseAnimation(stage);
-  mouseAnimation.update();
   let game = new Game(stage, manifest, sliceables);
   game.start();
 })
