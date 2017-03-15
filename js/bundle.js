@@ -128,8 +128,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-// import Player from ""
-
 var Game = function () {
   function Game(stage, manifest, sliceableImgs) {
     _classCallCheck(this, Game);
@@ -243,7 +241,6 @@ var Game = function () {
         if (this.pause) {
           this.stage.mouseEnabled = this.pause;
         }
-        // createjs.Ticker.setPaused = true;
       } else if (e.keyCode === 13 && (!this.started || this.gameOver)) {
         this.stage.removeChild(this.direction);
         if (this.strikes >= 3) {
@@ -252,15 +249,8 @@ var Game = function () {
         this.stage.removeChild(this.direction);
         createjs.Ticker.addEventListener("tick", this.tick);
         this.handlePlay();
-        // setInterval will stack, timeout won't run after some time
-        // setInterval(this.handlePlay, 1700);
         this.started = true;
       }
-      // else if ( e.keyCode === 13 && this.strikes >= 3) {
-      //   createjs.Ticker.addEventListener("tick", this.tick);
-      //   this.handlePlay();
-      //   this.stage.removeChild(this.direction)
-      // }
     }
   }, {
     key: "updateStrikes",
@@ -331,6 +321,7 @@ var Sliceable = function () {
     this.generateSliceables = this.generateSliceables.bind(this);
     //"bomb"
     this.types = ["peach", "apple", "strawberry", "watermelon"];
+    this.splats = ["yellow_splat", "green_splat", "red_splat", "red_splat"];
     this.determineSliceable = this.determineSliceable.bind(this);
     this.initializeProperties = this.initializeProperties.bind(this);
   }
@@ -345,10 +336,10 @@ var Sliceable = function () {
 
         this.circles[i].graphics.beginFill("black").drawCircle(radius, radius, radius);
         this.circles[i].alpha = 0;
-        this.circles[i].type = this.determineSliceable();
+        this.determineSliceable(i);
         // for checking times out of border length, 1 for creating, 2 to unstage
         this.circles[i].model = new createjs.Bitmap(this.loader.getResult("" + this.circles[i].type));
-
+        this.circles[i].splatter = new createjs.Bitmap(this.loader.getResult("" + this.circles[i].splat));
         // this.initializeProperties(i);
 
         this.circles[i].snapToPixel = true;
@@ -378,12 +369,20 @@ var Sliceable = function () {
       this.circles[i].model.begin = x;
       this.circles[i].model.end = end;
       this.circles[i].model.angle = angle;
+
+      this.circles[i].splatter.x = x;
+      this.circles[i].splatter.y = y + 5;
+      this.circles[i].splatter.begin = x;
+      this.circles[i].splatter.end = end;
+      this.circles[i].splatter.angle = angle;
     }
   }, {
     key: "determineSliceable",
-    value: function determineSliceable() {
-      var type = Math.round(Math.random() * 4);
-      return this.types[type];
+    value: function determineSliceable(id) {
+      var type = Math.round(Math.random() * 3);
+      // order for splat and type is same
+      this.circles[id].type = this.types[type];
+      this.circles[id].splat = this.splats[type];
     }
   }]);
 
@@ -503,10 +502,8 @@ var Sliceables = function () {
     value: function projectileMotionY(x, id) {
       if (x <= 320) {
         return -.26333333 * Math.pow(x, 2) / 100000 - 2 - id % 2;
-        // - 3 + Math.random()*1;
       } else {
         return .2633333 * Math.pow(x, 2) / 100000 + 2 + id % 2;
-        // + 3 + Math.random()*1;
       }
     }
   }, {
@@ -527,7 +524,6 @@ var Sliceables = function () {
           self.stage.removeChild(self.circles[id]);
           self.stage.removeChild(self.circles[id].model);
           self.stage.update();
-          // this.circles[id].mouseEnabled = false;
         }
         self.stage.update();
       });
@@ -552,19 +548,35 @@ var Sliceables = function () {
       var pt = void 0;
       var self = this;
       var score = 0;
-      this.stagedCirclesIds().forEach(function (id) {
+      this.stagedCirclesIds().forEach(function (id, idx, idArray) {
         pt = _this.circles[id].globalToLocal(_this.stage.mouseX, _this.stage.mouseY);
-        // this.circles[id] && this.stage.mouseInBounds &&
         if (_this.circles[id].hitTest(pt.x, pt.y) && _this.circles) {
           _this.playSound("splatter");
           score += 1;
           _this.circles[id].mouseEnabled = false;
+
           _this.stage.removeChild(_this.circles[id].model);
           _this.stage.removeChild(_this.circles[id]);
+
+          _this.circles[id].splatter.x = _this.circles[id].x;
+          _this.circles[id].splatter.y = _this.circles[id].y;
+          // splatter
+          _this.stage.addChild(_this.circles[id].splatter);
+          // set splat behind new fruits
+          // this.stage.setChildIndex( this.circles[id].splatter, this.stage.numChildren()-1);
           _this.stage.update();
+          setTimeout(function () {
+            return _this.removeSplatter(id);
+          }, 1000);
         }
       });
       return score;
+    }
+  }, {
+    key: "removeSplatter",
+    value: function removeSplatter(id) {
+      this.stage.removeChild(this.circles[id].splatter);
+      this.stage.update();
     }
   }, {
     key: "anySliceables",
@@ -609,7 +621,7 @@ var muteBtn = void 0;
 document.addEventListener('DOMContentLoaded', function () {
   var manifest = [{ src: "bomb-explode.ogg", id: "boom_sound" }, { src: "splatter.ogg", id: "splatter_sound" }, { src: "throw-fruit.ogg", id: "throw_sound" }, { src: "game_over.png", id: "game_over" }, { src: "new-game.png", id: "new-game" }, { src: "pineapple.png", id: "pineapple" }, { src: "splash.png", id: "splash" }, { src: "watermelon.png", id: "watermelon" }, { src: "x.png", id: "x" }, { src: "xf.png", id: "xf" }, { src: "xx.png", id: "xx" }, { src: "xxf.png", id: "xxf" }, { src: "xxx.png", id: "xxx" }, { src: "xxxf.png", id: "xxxf" }, { src: "background.jpg", id: "background" }];
 
-  var sliceables = [{ src: "apple-1.png", id: "apple_1" }, { src: "apple-2.png", id: "apple_2" }, { src: "apple.png", id: "apple" }, { src: "banana-1.png", id: "banana_1" }, { src: "banana-2.png", id: "banana_2" }, { src: "banana.png", id: "banana" }, { src: "peach-1.png", id: "peach_1" }, { src: "peach-2.png", id: "peach_2" }, { src: "peach.png", id: "peach" }, { src: "strawberry-1.png", id: "strawberry_1" }, { src: "strawberry-2.png", id: "strawberry_2" }, { src: "strawberry.png", id: "strawberry" }, { src: "watermelon-1.png", id: "watermelon_1" }, { src: "watermelon-2.png", id: "watermelon_2" }, { src: "watermelon.png", id: "watermelon" }, { src: "bomb.png", id: "bomb" }];
+  var sliceables = [{ src: "apple-1.png", id: "apple_1" }, { src: "apple-2.png", id: "apple_2" }, { src: "apple.png", id: "apple" }, { src: "banana-1.png", id: "banana_1" }, { src: "banana-2.png", id: "banana_2" }, { src: "banana.png", id: "banana" }, { src: "peach-1.png", id: "peach_1" }, { src: "peach-2.png", id: "peach_2" }, { src: "peach.png", id: "peach" }, { src: "strawberry-1.png", id: "strawberry_1" }, { src: "strawberry-2.png", id: "strawberry_2" }, { src: "strawberry.png", id: "strawberry" }, { src: "watermelon-1.png", id: "watermelon_1" }, { src: "watermelon-2.png", id: "watermelon_2" }, { src: "watermelon.png", id: "watermelon" }, { src: "s-green.png", id: "green_splat" }, { src: "s-yellow.png", id: "yellow_splat" }, { src: "s-red.png", id: "red_splat" }, { src: "bomb.png", id: "bomb" }];
 
   mute = false;
   muteBtn = document.getElementById("mute-btn");
