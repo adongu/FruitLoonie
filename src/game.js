@@ -1,5 +1,4 @@
 import Sliceables from "./sliceables";
-// import Player from ""
 
 export default class Game {
 
@@ -105,7 +104,6 @@ export default class Game {
       if (this.pause) {
         this.stage.mouseEnabled = this.pause;
       }
-      // createjs.Ticker.setPaused = true;
     } else if ( e.keyCode === 13 && (!this.started || this.gameOver)) {
       this.stage.removeChild(this.direction)
       if (this.strikes >= 3) {
@@ -114,15 +112,8 @@ export default class Game {
       this.stage.removeChild(this.direction);
       createjs.Ticker.addEventListener("tick", this.tick);
       this.handlePlay();
-      // setInterval will stack, timeout won't run after some time
-      // setInterval(this.handlePlay, 1700);
       this.started = true;
     }
-    // else if ( e.keyCode === 13 && this.strikes >= 3) {
-    //   createjs.Ticker.addEventListener("tick", this.tick);
-    //   this.handlePlay();
-    //   this.stage.removeChild(this.direction)
-    // }
   }
 
   updateStrikes() {

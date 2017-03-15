@@ -38,7 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
     { src: "watermelon-1.png", id: "watermelon_1" },
     { src: "watermelon-2.png", id: "watermelon_2" },
     { src: "watermelon.png", id: "watermelon" },
-    { src: "bomb.png", id: "bomb" },
+    { src: "s-green.png", id: "green_splat" },
+    { src: "s-yellow.png", id: "yellow_splat" },
+    { src: "s-red.png", id: "red_splat" },
+    { src: "bomb.png", id: "bomb" }
   ]
 
   mute = false;

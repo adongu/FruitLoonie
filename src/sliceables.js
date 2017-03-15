@@ -83,10 +83,8 @@ export default class Sliceables {
   projectileMotionY(x, id) {
     if (x <= 320) {
       return -.26333333*Math.pow(x,2)/100000 - 2 - id % 2;
-      // - 3 + Math.random()*1;
     } else {
       return .2633333*Math.pow(x,2)/100000 + 2 + id % 2;
-      // + 3 + Math.random()*1;
     }
   }
 
@@ -105,7 +103,6 @@ export default class Sliceables {
         self.stage.removeChild(self.circles[id])
         self.stage.removeChild(self.circles[id].model);
         self.stage.update();
-        // this.circles[id].mouseEnabled = false;
       }
       self.stage.update();
     })
@@ -124,19 +121,33 @@ export default class Sliceables {
     let pt;
     let self = this;
     let score = 0;
-    this.stagedCirclesIds().forEach( id => {
+    this.stagedCirclesIds().forEach( (id, idx, idArray) => {
       pt = this.circles[id].globalToLocal(this.stage.mouseX, this.stage.mouseY);
-// this.circles[id] && this.stage.mouseInBounds &&
       if (this.circles[id].hitTest(pt.x, pt.y) && this.circles) {
         this.playSound("splatter")
         score += 1;
         this.circles[id].mouseEnabled = false;
+
+
         this.stage.removeChild(this.circles[id].model);
         this.stage.removeChild(this.circles[id]);
+
+        this.circles[id].splatter.x = this.circles[id].x
+        this.circles[id].splatter.y = this.circles[id].y
+        // splatter
+        this.stage.addChild(this.circles[id].splatter);
+        // set splat behind new fruits
+        // this.stage.setChildIndex( this.circles[id].splatter, this.stage.numChildren()-1);
         this.stage.update();
+        setTimeout(() => this.removeSplatter(id), 1000);
       }
     });
     return score
+  }
+
+  removeSplatter(id) {
+    this.stage.removeChild(this.circles[id].splatter);
+    this.stage.update();
   }
 
   anySliceables() {
