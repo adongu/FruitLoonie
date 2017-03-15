@@ -32,10 +32,11 @@ export default class Sliceables {
     // number of circles to add
     let numCircles = 0;
     let stagedCirclesIds = this.stagedCirclesIds();
-    let id = 0;
+    let id;
       // check for unstaged circles, make sure doesn't stage more than created
     if (stagedCirclesIds && stagedCirclesIds.length + this.minimumSliceables <= this.difficulty) {
       while( numCircles < this.minimumSliceables ) {
+        id = Math.floor(Math.random() * (this.difficulty-1))
         if ( stagedCirclesIds.indexOf(id) === -1 ) {
           // this.circles[id].outOfBounds = false;
           this.sliceable.initializeProperties(id, this.width)
@@ -60,8 +61,8 @@ export default class Sliceables {
     let stagedCirclesIds = this.stagedCirclesIds();
     if (stagedCirclesIds.length > 0) {
       stagedCirclesIds.forEach( id => {
-        let deltaX = self.projectileMotionX(self.circles[id].x);
-        let deltaY = self.projectileMotionY(self.circles[id].x);
+        let deltaX = self.projectileMotionX(self.circles[id].x, id);
+        let deltaY = self.projectileMotionY(self.circles[id].x, id);
 
         self.circles[id].x += deltaX;
         self.circles[id].model.x += deltaX;
@@ -75,16 +76,16 @@ export default class Sliceables {
     this.stage.update();
   }
 
-  projectileMotionX(x) {
-    return 2*this.velocity;
+  projectileMotionX(x, id) {
+    return 2 * this.velocity + (id % 3);
   }
 
-  projectileMotionY(x) {
+  projectileMotionY(x, id) {
     if (x <= 320) {
-      return -.26333333*Math.pow(x,2)/100000 - 2;
+      return -.26333333*Math.pow(x,2)/100000 - 2 - id % 2;
       // - 3 + Math.random()*1;
     } else {
-      return .2633333*Math.pow(x,2)/100000 + 2;
+      return .2633333*Math.pow(x,2)/100000 + 2 + id % 2;
       // + 3 + Math.random()*1;
     }
   }

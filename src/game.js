@@ -11,7 +11,7 @@ export default class Game {
     this.pause = false;
     this.started = false;
     this.gameOver = false;
-    this.difficulty = 20;
+    this.difficulty = 40;
     this.score = 0;
     this.strikes = 0;
     this.scoreField = new createjs.Text(`Score: ${this.score}`, "bold 18px Arial", "#f70");
@@ -88,26 +88,23 @@ export default class Game {
   }
 
   tick(event) {
-    // let deltaS = event.delta / 1000;
-  //   let self = this;
-  //   // Object.keys(this.circles).forEach((id) =>{
-  //
-  //     // self.circles[id].alpha = 0;
-    this.sliceables.moveSliceables();
-    this.updateStrikes();
-    this.updateScore();
-    // this.checkCollision(pt, id)
-  //   // })
-    this.stage.update();
+    // tick only runs when not paused;
+    if (!this.pause) {
+      this.sliceables.moveSliceables();
+      this.updateStrikes();
+      this.updateScore();
+      this.stage.update();
+    }
   }
 
   handleKeys (e) {
     this.strikes = this.strikesField.text.split(": ").slice(1)*1
     // game pause
     if (e.keyCode === 32 && this.started) {
-      createjs.Ticker.setPaused(!this.pause)
       this.pause = !this.pause;
-      this.stage.mouseEnabled = (!this.pause);
+      if (this.pause) {
+        this.stage.mouseEnabled = this.pause;
+      }
       // createjs.Ticker.setPaused = true;
     } else if ( e.keyCode === 13 && (!this.started || this.gameOver)) {
       this.stage.removeChild(this.direction)
