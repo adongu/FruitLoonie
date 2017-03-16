@@ -1,3 +1,19 @@
+body {
+  background: url('../bg.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+header {
+  text-align: center;
+  padding: 20px;
+  font-family: Metal Mania;
+  font-size: 48px;
+  color: orange;
+}
+
 .game__cutting-board-box{
   border: 1px solid orange;
   max-width: 640px;
