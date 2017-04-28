@@ -440,6 +440,7 @@ var Sliceables = function () {
     this.playSound = this.playSound.bind(this);
     this.stagedCirclesIds = this.stagedCirclesIds.bind(this);
     this.stagedCirclesIds = this.stagedCirclesIds.bind(this);
+    this.isOutOfBounds = this.isOutOfBounds.bind(this);
   }
 
   _createClass(Sliceables, [{
@@ -481,7 +482,7 @@ var Sliceables = function () {
         stagedCirclesIds.forEach(function (id) {
           var x = self.circles[id].x;
           var begin = self.circles[id].begin;
-          var deltaX = self.projectileMotionX(x, id);
+          var deltaX = self.projectileMotionX(begin, id);
           var deltaY = self.projectileMotionY(x, begin, id);
 
           self.circles[id].x += deltaX;
@@ -499,8 +500,13 @@ var Sliceables = function () {
     }
   }, {
     key: "projectileMotionX",
-    value: function projectileMotionX(x, id) {
-      return 2 * this.velocity + id % 3;
+    value: function projectileMotionX(begin, id) {
+      var speed = 2 * this.velocity + id % 3;
+      if (begin <= 320) {
+        return speed;
+      } else {
+        return -speed;
+      }
     }
   }, {
     key: "projectileMotionY",
@@ -518,12 +524,24 @@ var Sliceables = function () {
     }
   }, {
     key: "checkOutOfBounds",
-    value: function checkOutOfBounds(id) {
+    value: function checkOutOfBounds() {
       var self = this;
       var strikes = 0;
       this.stagedCirclesIds().forEach(function (id) {
         // if greater than midpoint of canvas check if greater than width and height of canvas, doesn't check already out of bounds shapes
-        if (self.circles[id].outOfBounds === false && self.circles[id].x > self.width / 2 && (self.circles[id].y > self.height || self.circles[id].x > self.width)) {
+        // absolute_ratio checks for if shape has passed its midpoint path
+        var never_been_out_of_bound = self.circles[id].outOfBounds === false;
+        var passed_outer_bound = self.circles[id].y > self.height || self.circles[id].x > self.width;
+        var passed_its_midpoint = false;
+
+        if (self.circles[id].begin <= 320 && self.circles[id].x > self.width / 2) {
+          passed_its_midpoint = true;
+        } else if (self.circles[id].begin >= 320 && self.circles[id].x < self.width / 2) {
+          passed_its_midpoint = true;
+        }
+
+        if (never_been_out_of_bound && passed_its_midpoint && passed_outer_bound) {
+          // if (isOutOfBounds(self.circles[id], self.width / 2)) {
           self.circles[id].outOfBounds = true;
           strikes += 1;
           self.stage.removeChild(self.circles[id]);
@@ -533,6 +551,25 @@ var Sliceables = function () {
         self.stage.update();
       });
       return strikes;
+    }
+  }, {
+    key: "isOutOfBounds",
+    value: function isOutOfBounds(circle, midpoint) {
+      var never_been_out_of_bound = circle.outOfBounds === false;
+      var passed_outer_bound = circle.y > self.height || circle.x > midpoint * 2;
+      var passed_its_midpoint = false;
+
+      if (circle.begin <= 320 && circle.x > midpoint) {
+        passed_its_midpoint = true;
+      } else if (circle.begin >= 320 && circle.x < midpoint) {
+        passed_its_midpoint = true;
+      }
+
+      if (never_been_out_of_bound && passed_its_midpoint && passed_outer_bound) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }, {
     key: "stagedCirclesIds",
