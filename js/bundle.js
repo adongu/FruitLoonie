@@ -347,28 +347,34 @@ var Sliceable = function () {
   }, {
     key: "initializeProperties",
     value: function initializeProperties(i, width) {
-      var x = 0 + Math.random() * 100;
+      var x = void 0;
+      if (Math.random() <= 0.5) {
+        x = -5 + Math.random() * 150;
+      } else {
+        x = +495 + Math.random() * 150;
+      }
+      //  * 400;
       var y = 400;
       var angle = 45 + Math.random() * 10;
-      var end = 580 + Math.random() + 50;
       this.circles[i].outOfBounds = false;
 
       this.circles[i].x = x;
       this.circles[i].y = y;
       this.circles[i].begin = x;
-      this.circles[i].end = end;
+      console.log(this.circles[i].x);
+      // this.circles[i].end = end;
       this.circles[i].angle = angle;
 
       this.circles[i].model.x = x;
       this.circles[i].model.y = y + 5;
       this.circles[i].model.begin = x;
-      this.circles[i].model.end = end;
+      // this.circles[i].model.end = end;
       this.circles[i].model.angle = angle;
 
       this.circles[i].splatter.x = x;
       this.circles[i].splatter.y = y + 5;
       this.circles[i].splatter.begin = x;
-      this.circles[i].splatter.end = end;
+      // this.circles[i].splatter.end = end;
       this.circles[i].splatter.angle = angle;
     }
   }, {
@@ -473,8 +479,10 @@ var Sliceables = function () {
       var stagedCirclesIds = this.stagedCirclesIds();
       if (stagedCirclesIds.length > 0) {
         stagedCirclesIds.forEach(function (id) {
-          var deltaX = self.projectileMotionX(self.circles[id].x, id);
-          var deltaY = self.projectileMotionY(self.circles[id].x, id);
+          var x = self.circles[id].x;
+          var begin = self.circles[id].begin;
+          var deltaX = self.projectileMotionX(x, id);
+          var deltaY = self.projectileMotionY(x, begin, id);
 
           self.circles[id].x += deltaX;
           self.circles[id].model.x += deltaX;
@@ -496,8 +504,8 @@ var Sliceables = function () {
     }
   }, {
     key: "projectileMotionY",
-    value: function projectileMotionY(x, id) {
-      if (x <= 320) {
+    value: function projectileMotionY(x, begin, id) {
+      if (x <= 320 && begin <= 320 || x >= 320 && begin >= 320) {
         return -.26333333 * Math.pow(x, 2) / 100000 - 2 - id % 2;
       } else {
         return .2633333 * Math.pow(x, 2) / 100000 + 2 + id % 2;
@@ -554,7 +562,6 @@ var Sliceables = function () {
 
           _this.stage.removeChild(_this.circles[id].model);
           _this.stage.removeChild(_this.circles[id]);
-
           _this.circles[id].splatter.x = _this.circles[id].x;
           _this.circles[id].splatter.y = _this.circles[id].y;
           // splatter

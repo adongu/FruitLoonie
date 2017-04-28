@@ -61,8 +61,10 @@ export default class Sliceables {
     let stagedCirclesIds = this.stagedCirclesIds();
     if (stagedCirclesIds.length > 0) {
       stagedCirclesIds.forEach( id => {
-        let deltaX = self.projectileMotionX(self.circles[id].x, id);
-        let deltaY = self.projectileMotionY(self.circles[id].x, id);
+        let x = self.circles[id].x;
+        let begin = self.circles[id].begin;
+        let deltaX = self.projectileMotionX(x, id);
+        let deltaY = self.projectileMotionY(x, begin, id);
 
         self.circles[id].x += deltaX;
         self.circles[id].model.x += deltaX;
@@ -82,12 +84,12 @@ export default class Sliceables {
     return 2 * this.velocity + (id % 3);
   }
 
-  projectileMotionY(x, id) {
-    if (x <= 320) {
-      return -.26333333*Math.pow(x,2)/100000 - 2 - id % 2;
-    } else {
-      return .2633333*Math.pow(x,2)/100000 + 2 + id % 2;
-    }
+  projectileMotionY(x, begin, id) {
+      if ((x <= 320 && begin <= 320) || (x >= 320 && begin >= 320)) {
+        return -.26333333*Math.pow(x,2)/100000 - 2 - id % 2;
+      } else {
+        return .2633333*Math.pow(x,2)/100000 + 2 + id % 2;
+      }
   }
 
   createSliceables (width){
@@ -133,7 +135,6 @@ export default class Sliceables {
 
         this.stage.removeChild(this.circles[id].model);
         this.stage.removeChild(this.circles[id]);
-
         this.circles[id].splatter.x = this.circles[id].x
         this.circles[id].splatter.y = this.circles[id].y
         // splatter
