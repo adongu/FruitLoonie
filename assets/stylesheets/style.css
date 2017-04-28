@@ -71,6 +71,7 @@ canvas {
 }
 
 .icon {
+  margin-top: 5px;
   display: block;
   width: 100%;
   padding: 0px 9px;
