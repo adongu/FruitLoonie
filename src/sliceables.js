@@ -68,7 +68,9 @@ export default class Sliceables {
         self.circles[id].model.x += deltaX;
         self.circles[id].y += deltaY;
         self.circles[id].model.y += deltaY;
-
+        // check for beginning, move slicables depending on begin and end
+        // this.circles[i].model.begin = x;
+        // this.circles[i].model.end = end;
         // self.handleSliceables(self.circles[id], time)
         self.stage.update();
       });

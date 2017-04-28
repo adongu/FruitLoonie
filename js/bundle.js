@@ -82,8 +82,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Animations = function () {
-  // selects stage through id
-
   function Animations(stage) {
     _classCallCheck(this, Animations);
 
@@ -95,10 +93,7 @@ var Animations = function () {
     key: "update",
     value: function update() {
       this.stage.mouseMoveOutside = true;
-      this.stage.on("stagemousemoove", MouseMove = function MouseMove() {
-        // console.log("stageX/Y: "+evt.stageX+","+evt.stageY) // always in bounds
-        // console.log("rawX/Y: "+evt.rawX+","+evt.rawY) // could be < 0, or > width/height
-      });
+      this.stage.on("stagemousemoove", MouseMove = function MouseMove() {});
     }
   }]);
 
@@ -485,7 +480,9 @@ var Sliceables = function () {
           self.circles[id].model.x += deltaX;
           self.circles[id].y += deltaY;
           self.circles[id].model.y += deltaY;
-
+          // check for beginning, move slicables depending on begin and end
+          // this.circles[i].model.begin = x;
+          // this.circles[i].model.end = end;
           // self.handleSliceables(self.circles[id], time)
           self.stage.update();
         });
