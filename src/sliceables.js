@@ -23,10 +23,10 @@ export default class Sliceables {
     this.moveSliceables = this.moveSliceables.bind(this);
     this.checkOutOfBounds = this.checkOutOfBounds.bind(this);
     this.checkCollisions = this.checkCollisions.bind(this);
-    this.playSound = this.playSound.bind(this);
+    // this.playSound = this.playSound.bind(this);
     this.stagedCirclesIds = this.stagedCirclesIds.bind(this);
     this.stagedCirclesIds = this.stagedCirclesIds.bind(this);
-    this.isOutOfBounds = this.isOutOfBounds.bind(this);
+    // this.isOutOfBounds = this.isOutOfBounds.bind(this);
   }
 
   stageSliceables() {
@@ -71,10 +71,6 @@ export default class Sliceables {
         self.circles[id].model.x += deltaX;
         self.circles[id].y += deltaY;
         self.circles[id].model.y += deltaY;
-        // check for beginning, move slicables depending on begin and end
-        // this.circles[i].model.begin = x;
-        // this.circles[i].model.end = end;
-        // self.handleSliceables(self.circles[id], time)
         self.stage.update();
       });
     }
@@ -118,7 +114,8 @@ export default class Sliceables {
         passed_its_midpoint = true;
       }
 
-      if (never_been_out_of_bound && passed_its_midpoint && passed_outer_bound) {
+    if (never_been_out_of_bound && passed_its_midpoint && passed_outer_bound) {
+      // console.log(isOutOfBounds(self.circles[id], self.width / 2));
     // if (isOutOfBounds(self.circles[id], self.width / 2)) {
         self.circles[id].outOfBounds = true;
         strikes += 1;
@@ -131,23 +128,23 @@ export default class Sliceables {
     return strikes;
   }
 
-  isOutOfBounds(circle, midpoint) {
-    let never_been_out_of_bound = circle.outOfBounds === false;
-    let passed_outer_bound = (circle.y > self.height || circle.x > midpoint * 2);
-    let passed_its_midpoint = false;
-
-    if ((circle.begin <= 320) && (circle.x > midpoint)) {
-      passed_its_midpoint = true;
-    } else if ((circle.begin >= 320) && (circle.x < midpoint)) {
-      passed_its_midpoint = true;
-    }
-
-    if (never_been_out_of_bound && passed_its_midpoint && passed_outer_bound) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  // isOutOfBounds(circle, midpoint) {
+  //   let never_been_out_of_bound = circle.outOfBounds === false;
+  //   let passed_outer_bound = (circle.y > self.height || circle.x > midpoint * 2);
+  //   let passed_its_midpoint = false;
+  //
+  //   if ((circle.begin <= 320) && (circle.x > midpoint)) {
+  //     passed_its_midpoint = true;
+  //   } else if ((circle.begin >= 320) && (circle.x < midpoint)) {
+  //     passed_its_midpoint = true;
+  //   }
+  //
+  //   if (never_been_out_of_bound && passed_its_midpoint && passed_outer_bound) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
   stagedCirclesIds() {
     let circles = this.stage.children.filter((child) => {
