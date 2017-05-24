@@ -103,19 +103,17 @@ export default class Sliceables {
     let strikes = 0;
     this.stagedCirclesIds().forEach( id => {
       // if greater than midpoint of canvas check if greater than width and height of canvas, doesn't check already out of bounds shapes
-      // absolute_ratio checks for if shape has passed its midpoint path
       let never_been_out_of_bound = self.circles[id].outOfBounds === false;
       let passed_outer_bound = (self.circles[id].y > self.height || self.circles[id].x > self.width);
       let passed_its_midpoint = false;
-
+      // Logic for confirm object passed its midpoint
       if ((self.circles[id].begin <= 320) && (self.circles[id].x > self.width / 2)) {
         passed_its_midpoint = true;
       } else if ((self.circles[id].begin >= 320) && (self.circles[id].x < self.width / 2)) {
         passed_its_midpoint = true;
       }
 
-    if (never_been_out_of_bound && passed_its_midpoint && passed_outer_bound) {
-      // console.log(isOutOfBounds(self.circles[id], self.width / 2));
+      if (never_been_out_of_bound && passed_its_midpoint && passed_outer_bound) {
     // if (isOutOfBounds(self.circles[id], self.width / 2)) {
         self.circles[id].outOfBounds = true;
         strikes += 1;
