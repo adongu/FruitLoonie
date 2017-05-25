@@ -48,7 +48,6 @@ export default class Sliceable {
     this.circles[i].x = x;
     this.circles[i].y = y;
     this.circles[i].begin = x;
-    console.log(this.circles[i].x);
     // this.circles[i].end = end;
     this.circles[i].angle = angle;
 

@@ -23,13 +23,10 @@ export default class Game {
     createjs.MotionGuidePlugin.install();
     this.sliceables = new Sliceables(this.stage, this.difficulty, this.loader);
     this.tick = this.tick.bind(this);
-    // this.createFields = this.createFields.bind(this);
     this.handleComplete = this.handleComplete.bind(this);
-    // this.handleKeys = this.handleKeys.bind(this);
     this.handlePlay = this.handlePlay.bind(this);
     this.updateStrikes = this.updateStrikes.bind(this);
     this.updateScore = this.updateScore.bind(this);
-    // this.restart = this.restart.bind(this);
   };
 
   start () {
@@ -144,7 +141,6 @@ export default class Game {
     this.strikes = 0;
     this.score = 0;
     this.gameOver = false;
-    // this.stage.addChild(scoreBoard);
     this.handleComplete();
   }
 
