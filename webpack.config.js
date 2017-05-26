@@ -1,11 +1,6 @@
 module.exports = {
-  entry:[
-    "./js/libs/PreloadJS-0.6.2/lib/preloadjs-0.6.2.min.js",
-    "./js/libs/EaselJS-0.8.2/lib/easeljs-0.8.2.min.js",
-    "./js/libs/TweenJS-0.6.2/lib/tweenjs-0.6.2.min.js",
-    "./js/libs/SoundJS-0.6.2/lib/soundjs-0.6.2.min.js",
-    "./src/main.js"
-  ],
+  entry:
+    "./src/main.js",
   output: {
   	filename: "./js/bundle.js"
   },
@@ -18,6 +13,10 @@ module.exports = {
         query: {
           presets: ['es2015']
         }
+      },
+      {
+        test: require.resolve('createjs-easeljs'),
+        loader: 'imports?this=>window!exports?window.createjs'
       }
     ]
   },
