@@ -1,5 +1,8 @@
+'use strict'
+
 import Game from './game';
 import Animation from './Animation'
+
 
 let mute;
 let muteBtn;
