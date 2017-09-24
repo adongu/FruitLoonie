@@ -126,24 +126,6 @@ export default class Sliceables {
     return strikes;
   }
 
-  // isOutOfBounds(circle, midpoint) {
-  //   let never_been_out_of_bound = circle.outOfBounds === false;
-  //   let passed_outer_bound = (circle.y > self.height || circle.x > midpoint * 2);
-  //   let passed_its_midpoint = false;
-  //
-  //   if ((circle.begin <= 320) && (circle.x > midpoint)) {
-  //     passed_its_midpoint = true;
-  //   } else if ((circle.begin >= 320) && (circle.x < midpoint)) {
-  //     passed_its_midpoint = true;
-  //   }
-  //
-  //   if (never_been_out_of_bound && passed_its_midpoint && passed_outer_bound) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
-
   stagedCirclesIds() {
     let circles = this.stage.children.filter((child) => {
       // child is circle if it has type property
